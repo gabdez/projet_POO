@@ -8,8 +8,10 @@ namespace projet_POO
 {
     abstract class Vehicule
     {
-        private int codeV;
+        private int immatriculation;
         public string marque;
-        public int nbr_km;
+        public int nbr_km_parcouru;
+        public float conso_km;
+        public int nbr_roues;
     }
 }

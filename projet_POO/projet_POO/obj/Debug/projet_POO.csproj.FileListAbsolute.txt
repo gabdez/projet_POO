@@ -1,1 +1,6 @@
 C:\Users\gfa2\Desktop\esilv_prog\POO\projet_POO\projet_POO\projet_POO\bin\Debug\projet_POO.exe.config
+C:\Users\gfa2\Desktop\esilv_prog\POO\projet_POO\projet_POO\projet_POO\bin\Debug\projet_POO.exe
+C:\Users\gfa2\Desktop\esilv_prog\POO\projet_POO\projet_POO\projet_POO\bin\Debug\projet_POO.pdb
+C:\Users\gfa2\Desktop\esilv_prog\POO\projet_POO\projet_POO\projet_POO\obj\Debug\projet_POO.csprojResolveAssemblyReference.cache
+C:\Users\gfa2\Desktop\esilv_prog\POO\projet_POO\projet_POO\projet_POO\obj\Debug\projet_POO.exe
+C:\Users\gfa2\Desktop\esilv_prog\POO\projet_POO\projet_POO\projet_POO\obj\Debug\projet_POO.pdb
