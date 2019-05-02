@@ -64,6 +64,11 @@ namespace projet_POO
             this.list_trajet.Remove(t);
         }
 
+        public List<Vehicule> getVehiculeParMarque(string marque)
+        {
+            Console.ReadLine();
+            return this.list_vehicule.Select(v => v).ToList();
+        }
 
         public void addData()
         {
