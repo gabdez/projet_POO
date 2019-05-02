@@ -12,34 +12,13 @@ namespace projet_POO
         private List<Client> list_client = new List<Client>();
         private List<Trajet> list_trajet = new List<Trajet>();
 
-        public Agence(){}
-
-        public void ajouter_client()
+        public void ajouter_client(string nom, string prenom)
         {
-            Console.WriteLine("Formulaire d'ajout client:");
-            Console.Write("Nom client: ");
-            String nom = Console.ReadLine();
-            Console.Write("Prénom client: ");
-            String prenom = Console.ReadLine();
-
             this.list_client.Add(new Client(nom, prenom));
-            Console.WriteLine("Client créé avec succés!");
         }
 
-        public void ajouter_vehicule()
+        public void ajouter_vehicule(string typeVehicule, string immat, string marque, int nbr_km_parcouru, float conso)
         {
-            Console.WriteLine("Formulaire d'ajout Vehicule:");
-            Console.Write("Quel type de vehicule souhaiter vous ajouter? : \n Voiture(1) \n moto(2) \n camion (3)\n votre choix: ");
-            String typeVehicule = Console.ReadLine();
-            Console.Write("Immatriculation: ");
-            String immat = Console.ReadLine();
-            Console.Write("marque: ");
-            String marque = Console.ReadLine();
-            Console.Write("nombre de kilomètre parcouru: ");
-            int nbr_km_parcouru = int.Parse(Console.ReadLine());
-            Console.Write("Consommation L/100km : ");
-            float conso = float.Parse(Console.ReadLine());
-
             Vehicule v = null;
 
             switch (typeVehicule)
@@ -57,124 +36,32 @@ namespace projet_POO
                     int volume = int.Parse(Console.ReadLine());
                     v = new Camion(immat, marque, nbr_km_parcouru, conso, volume);
                     break;
+
+                default:
+                    v = new Voiture(immat, marque, nbr_km_parcouru, conso);
+                    break;
             }
             this.list_vehicule.Add(v);
-            Console.WriteLine("vehicule créé avec succés!");
         }
-        public void ajouter_trajet()
+        public void ajouter_trajet(string immat, string codeC, string ville_dep, string ville_arr, int km_trajet, float carburantPrix)
         {
-            Console.WriteLine("Formulaire de création d'un trajet:");
-            this.fiche_vehicule();
-            Console.WriteLine("Indiquer l'immatriculation du véhicule effectuant le trajet: ");
-            string immat = Console.ReadLine();
             Vehicule v = this.list_vehicule.Find(vehicule => vehicule.immatriculation == immat);
-            this.fiche_client();
-            Console.WriteLine("Indiquer le code client du client effectuant le trajet: ");
-            string code = Console.ReadLine();
-            Client c = this.list_client.Find(client => client.CodeC == int.Parse(code));
-            Console.WriteLine("Indiquer la ville de départ du trajet: ");
-            string ville_dep = Console.ReadLine();
-            Console.WriteLine("Indiquer la ville d'arrivée du trajet: ");
-            string ville_arr = Console.ReadLine();
-            Console.WriteLine("Indiquer le nombre de km du trajet: ");
-            int km_trajet = int.Parse(Console.ReadLine());
-            Console.WriteLine("Indiquer le prix du carburant pour 1L: ");
-            float carburantPrix = float.Parse(Console.ReadLine());
-
-            this.list_trajet.Add(new Trajet(v, c,ville_dep, ville_arr, km_trajet, carburantPrix));
-            Console.WriteLine("trajet créé avec succés!");
+            Client c = this.list_client.Find(client => client.CodeC == int.Parse(codeC));
+            this.list_trajet.Add(new Trajet(v, c, ville_dep, ville_arr, km_trajet, carburantPrix));
         }
 
-        public void supprimer_client()
+        public void supprimer_client(Client c)
         {
-            if(this.list_client.Count == 0)
-            {
-                Console.WriteLine("Il n'y a aucun client à supprimer");
-            }
-            else
-            {
-                this.fiche_client();
-                Console.Write("Indiquer le code client du client à supprimer: ");
-                string code = Console.ReadLine();
-                Client c = this.list_client.Find(client => client.CodeC == int.Parse(code));
-                if(c == null)
-                    Console.WriteLine("Le code client que vous avait tapé n'existe pas");
-                else
-                {
-                    this.list_client.Remove(c);
-                    Console.WriteLine("Client supprimé");
-                }
-            }
+            this.list_client.Remove(c);
         }
 
-        public void supprimer_vehicule()
+        public void supprimer_vehicule(Vehicule v)
         {
-            if (this.list_vehicule.Count == 0)
-            {
-                Console.WriteLine("Il n'y a aucun vehicule à supprimer");
-            }
-            else
-            {
-                this.fiche_vehicule();
-                Console.Write("Indiquer l'immatriculation du vehicule à supprimer: ");
-                string immat = Console.ReadLine();
-                Vehicule v = this.list_vehicule.Find(vehicule => vehicule.immatriculation == immat);
-                if (v == null)
-                    Console.WriteLine("L'immatriculation du vehicule que vous avait tapé n'existe pas");
-                else
-                {
-                    this.list_vehicule.Remove(v);
-                    Console.WriteLine("Vehicule supprimé");
-                }
-            }
+            this.list_vehicule.Remove(v);
         }
-        public void supprimer_trajet()
+        public void supprimer_trajet(Trajet t)
         {
-            if (this.list_trajet.Count == 0)
-            {
-                Console.WriteLine("Il n'y a aucun trajet à supprimer");
-            }
-            else
-            {
-                this.trajet();
-                Console.Write("Indiquer le code trajet du trajet à supprimer: ");
-                string codeT = Console.ReadLine();
-                Trajet t = this.list_trajet.Find(trajet => trajet.CodeT == int.Parse(codeT));
-                if (t == null)
-                    Console.WriteLine("Le code du trajet que vous avait tapé n'existe pas");
-                else
-                {
-                    this.list_trajet.Remove(t);
-                    Console.WriteLine("Trajet supprimé");
-                }
-            }
-        }
-
-
-        public void fiche_vehicule()
-        {
-            Console.WriteLine("Fiche véhicule");
-            Console.WriteLine("Tous les vehicules existants:");
-            this.list_vehicule.ForEach(v =>
-            {
-                Console.WriteLine(v.toString());
-            });
-        }
-        public void fiche_client()
-        {
-            Console.WriteLine("Tous les clients existants:");
-            this.list_client.ForEach(client =>
-            {
-                Console.WriteLine(client.toString());
-            });
-        }
-        public void trajet()
-        {
-            Console.WriteLine("Tous les trajets existants:");
-            this.list_trajet.ForEach(trajet =>
-            {
-                Console.WriteLine(trajet.toString());
-            });
+            this.list_trajet.Remove(t);
         }
 
 
@@ -189,6 +76,28 @@ namespace projet_POO
             this.list_vehicule.Add(new Camion("123", "Renault", 200000, 8, 10));
             this.list_vehicule.Add(new Moto("456", "BMW", 200000, 9));
             this.list_vehicule.Add(new Voiture("789", "Audi", 200000, 4));
+        }
+
+        public List<Vehicule> List_vehicule
+        {
+            get
+            {
+                return this.list_vehicule;
+            }
+        }
+        public List<Client> List_client
+        {
+            get
+            {
+                return this.list_client;
+            }
+        }
+        public List<Trajet> List_trajet
+        {
+            get
+            {
+                return this.list_trajet;
+            }
         }
     }
 }
