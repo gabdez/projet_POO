@@ -8,14 +8,16 @@ namespace projet_POO
 {
     class Voiture : Vehicule
     {
-        public Voiture(String immat, string marque, int nbr_km_parcouru, float conso_km)
+        public Voiture(String immat, string marque, int prix_achat, float conso_km, Tcarburant carb)
         {
             this.immatriculation = immat;
             this.marque = marque;
-            this.nbr_km_parcouru = nbr_km_parcouru;
+            this.prix_achat = prix_achat;
             this.conso_km = conso_km;
             this.nbr_roues = 4;
             this.typeV = "voiture";
+            this.nbr_km_parcouru = 0;
+            this.Carb = carb;
         }
     }
 }

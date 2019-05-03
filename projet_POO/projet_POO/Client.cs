@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +11,7 @@ namespace projet_POO
         private int codeC;
         public string nom;
         public string prenom;
+        public int nbr_km_parcouru;
 
         public Client(string nom, string prenom)
         {
@@ -20,9 +20,10 @@ namespace projet_POO
             this.prenom = prenom;
         }
 
-        public string toString()
+        public override string ToString()
         {
-            return "Code client: " + this.codeC + " ; Nom client: " + this.nom + " ; Prenom client: " + this.prenom;
+            return "Code client: " + this.codeC + " ; Nom : " + this.nom + " ; Prenom : " + this.prenom +
+                " ; Nombre de kilomètre parcouru : " + this.nbr_km_parcouru;
         }
 
         public int CodeC

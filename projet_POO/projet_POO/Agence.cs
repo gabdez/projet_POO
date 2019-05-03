@@ -24,21 +24,21 @@ namespace projet_POO
             switch (typeVehicule)
             {
                 case "1":
-                    v = new Voiture(immat, marque, nbr_km_parcouru,conso);
+                    v = new Voiture(immat, marque, nbr_km_parcouru,conso,Vehicule.Tcarburant.sansPlomb95);
                     break;
 
                 case "2":
-                    v = new Moto(immat, marque, nbr_km_parcouru, conso);
+                    v = new Moto(immat, marque, nbr_km_parcouru, conso, Vehicule.Tcarburant.sansPlomb95);
                     break;
 
                 case "3":
                     Console.Write("Le volume de chargement de votre camion: ");
                     int volume = int.Parse(Console.ReadLine());
-                    v = new Camion(immat, marque, nbr_km_parcouru, conso, volume);
+                    v = new Camion(immat, marque, nbr_km_parcouru, conso, volume, Vehicule.Tcarburant.sansPlomb95);
                     break;
 
                 default:
-                    v = new Voiture(immat, marque, nbr_km_parcouru, conso);
+                    v = new Voiture(immat, marque, nbr_km_parcouru, conso, Vehicule.Tcarburant.sansPlomb95);
                     break;
             }
             this.list_vehicule.Add(v);
@@ -48,6 +48,8 @@ namespace projet_POO
             Vehicule v = this.list_vehicule.Find(vehicule => vehicule.immatriculation == immat);
             Client c = this.list_client.Find(client => client.CodeC == int.Parse(codeC));
             this.list_trajet.Add(new Trajet(v, c, ville_dep, ville_arr, km_trajet, carburantPrix));
+            v.nbr_km_parcouru += km_trajet;
+            c.nbr_km_parcouru += km_trajet;
         }
 
         public void supprimer_client(Client c)
@@ -64,11 +66,12 @@ namespace projet_POO
             this.list_trajet.Remove(t);
         }
 
-        public List<Vehicule> getVehiculeParMarque(string marque)
-        {
-            Console.ReadLine();
-            return this.list_vehicule.Select(v => v).ToList();
-        }
+        //public List<Vehicule> getKmParcouruParVehicule(string marque)
+        //{
+        //    this.list_vehicule.ForEach(v => {
+
+        //    });
+        //}
 
         public void addData()
         {
@@ -78,9 +81,20 @@ namespace projet_POO
             this.list_client.Add(new Client("Augustin", "LEEEEEEE"));
 
 
-            this.list_vehicule.Add(new Camion("123", "Renault", 200000, 8, 10));
-            this.list_vehicule.Add(new Moto("456", "BMW", 200000, 9));
-            this.list_vehicule.Add(new Voiture("789", "Audi", 200000, 4));
+            this.list_vehicule.Add(new Camion("123", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
+            this.list_vehicule.Add(new Moto("456", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
+            this.list_vehicule.Add(new Voiture("789", "Audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
+            this.list_vehicule.Add(new Camion("1273", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
+            this.list_vehicule.Add(new Moto("4576", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
+            this.list_vehicule.Add(new Voiture("7789", "audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
+            this.list_vehicule.Add(new Camion("1243", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
+            this.list_vehicule.Add(new Moto("4516", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
+            this.list_vehicule.Add(new Voiture("7289", "audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
+
+            this.ajouter_trajet("123", "1", "HR", "Cergy", 100, 6);
+            this.ajouter_trajet("456", "3", "Cergy", "paris", 500, 6);
+            this.ajouter_trajet("789", "1", "Paris", "HR", 80, 6);
+            this.ajouter_trajet("789", "1", "paris", "Cergy", 80, 6);
         }
 
         public List<Vehicule> List_vehicule

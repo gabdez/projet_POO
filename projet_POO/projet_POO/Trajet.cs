@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,7 +32,7 @@ namespace projet_POO
         {
             return this.nbr_km * v.conso_km * this.prix_carburant;
         }
-        public string toString()
+        public override string ToString()
         {
             return "Code trajet: " + this.codeT + " ; Depart: " + this.depart + " ; Arrivée: " + this.arrivé + " ; Cout total: " + this.cout_total() + " euros";
         }
@@ -43,6 +42,20 @@ namespace projet_POO
             get
             {
                 return this.codeT;
+            }
+        }
+        public string Depart
+        {
+            get
+            {
+                return this.depart;
+            }
+        }
+        public string Arrivee
+        {
+            get
+            {
+                return this.arrivé;
             }
         }
     }
