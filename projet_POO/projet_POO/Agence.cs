@@ -78,7 +78,11 @@ namespace projet_POO
             this.list_client.Add(new Client("Fernandez casa", "Gabriel"));
             this.list_client.Add(new Client("Valentin", "Fernandez casa"));
             this.list_client.Add(new Client("Lucy", "VANG"));
-            this.list_client.Add(new Client("Augustin", "LEEEEEEE"));
+            this.list_client.Add(new Client("Au", "LEE"));
+            this.list_client.Add(new Client("raph", "Gabriel"));
+            this.list_client.Add(new Client("Valentin", "gabriel"));
+            this.list_client.Add(new Client("Lucy", "VANGgggg"));
+            this.list_client.Add(new Client("Augustin", "gabriel"));
 
 
             this.list_vehicule.Add(new Camion("123", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
@@ -91,10 +95,14 @@ namespace projet_POO
             this.list_vehicule.Add(new Moto("4516", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
             this.list_vehicule.Add(new Voiture("7289", "audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
 
-            this.ajouter_trajet("123", "1", "HR", "Cergy", 100, 6);
+            this.ajouter_trajet("123", "4", "HR", "Cergy", 100, 6);
             this.ajouter_trajet("456", "3", "Cergy", "paris", 500, 6);
             this.ajouter_trajet("789", "1", "Paris", "HR", 80, 6);
-            this.ajouter_trajet("789", "1", "paris", "Cergy", 80, 6);
+            this.ajouter_trajet("789", "5", "paris", "Cergy", 80, 6);
+            this.ajouter_trajet("1273", "2", "marseille", "Lyon", 400, 6);
+            this.ajouter_trajet("4576", "6", "avranche", "brest", 350, 6);
+            this.ajouter_trajet("1243", "7", "Lyon", "HR", 600, 6);
+            this.ajouter_trajet("7289", "1", "bordeau", "Nice", 300, 6);
         }
 
         public List<Vehicule> List_vehicule
