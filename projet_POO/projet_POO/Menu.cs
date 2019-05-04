@@ -22,39 +22,8 @@ namespace projet_POO
         {
             a.addData();
             this.connexion();
-            bool play = true;
-
-            while (play)
-            {
-                Console.Clear();
-                Console.WriteLine("MENU PRINCIPAL\n");
-                Console.WriteLine("\t Menu vehicule (1)");
-                Console.WriteLine("\t Menu client (2)");
-                Console.WriteLine("\t Menu trajet (3)");
-                Console.WriteLine("\t Exit application (e)\n");
-                Console.Write("Votre choix: ");
-
-                string menu = Console.ReadLine();
-
-                switch (menu)
-                {
-                    case "1":
-                        this.menu_vehicule();
-                        break;
-
-                    case "2":
-                        this.menu_client();
-                        break;
-
-                    case "3":
-                        this.menu_trajet();
-                        break;
-
-                    case "e":
-                        play = false;
-                        break;
-                }
-            }
+            if (this.typeConnexion == "admin") this.menu_admin();
+            else this.menu_client();
         }
 
         public void connexion()
@@ -78,7 +47,7 @@ namespace projet_POO
                         string ident = Console.ReadLine();
                         Console.Write("Mot de passe: ");
                         string mdp = Console.ReadLine();
-                        if(!a.checkClient(ident, mdp))
+                        if (!a.checkClient(ident, mdp))
                             Console.WriteLine("identifiant ou mot de pass incorrect !");
                         else
                         {
@@ -86,7 +55,7 @@ namespace projet_POO
                             this.typeConnexion = "client";
                             connected = false;
                         }
-                        
+
                         System.Threading.Thread.Sleep(1000);
                         break;
 
@@ -102,12 +71,13 @@ namespace projet_POO
                         string ident_admin = Console.ReadLine();
                         Console.Write("Mot de passe admin: ");
                         string mdp_admin = Console.ReadLine();
-                        if(a.checkAdmin(ident_admin, mdp_admin))
+                        if (a.checkAdmin(ident_admin, mdp_admin))
                         {
                             Console.WriteLine("\nConnexion en mode admin réussi !");
                             this.typeConnexion = "admin";
                             connected = false;
-                        }else Console.WriteLine("identifiant ou mot de pass incorrect !");
+                        }
+                        else Console.WriteLine("identifiant ou mot de pass incorrect !");
 
                         System.Threading.Thread.Sleep(1000);
                         break;
@@ -118,7 +88,43 @@ namespace projet_POO
             }
         }
 
-        // Les menus d'affichage
+        public void menu_admin()
+        {
+            bool play = true;
+
+            while (play)
+            {
+                Console.Clear();
+                Console.WriteLine("MENU PRINCIPAL\n");
+                Console.WriteLine("\t Gérer les vehicules (1)");
+                Console.WriteLine("\t Gérer les clients (2)");
+                Console.WriteLine("\t Gérer les trajets (3)");
+                Console.WriteLine("\t Exit application (e)\n");
+                Console.Write("Votre choix: ");
+
+                string menu = Console.ReadLine();
+
+                switch (menu)
+                {
+                    case "1":
+                        this.gerer_vehicule();
+                        break;
+
+                    case "2":
+                        this.gerer_client();
+                        break;
+
+                    case "3":
+                        this.gerer_trajet();
+                        break;
+
+                    case "e":
+                        play = false;
+                        break;
+                }
+            }
+        }
+
         public void menu_client()
         {
             bool play = true;
@@ -126,15 +132,47 @@ namespace projet_POO
             while (play)
             {
                 Console.Clear();
+                Console.WriteLine("MENU PRINCIPAL\n");
+                Console.WriteLine("\t Louer un vehicule (1)");
+                Console.WriteLine("\t Mes commandes (2)");
+                Console.WriteLine("\t Exit application (e)\n");
+                Console.Write("Votre choix: ");
+
+                string menu = Console.ReadLine();
+
+                switch (menu)
+                {
+                    case "1":
+                        this.gerer_vehicule();
+                        break;
+
+                    case "2":
+                        this.gerer_client();
+                        break;
+
+                    case "e":
+                        play = false;
+                        break;
+                }
+            }
+        }
+
+        // Les menus d'affichages
+        public void gerer_client()
+        {
+            bool play = true;
+
+            while (play)
+            {
+                Console.Clear();
                 Console.WriteLine("MENU PRINCIPAL > MENU CLIENT \n");
-                Console.WriteLine("\t Ajouter client (1)");
-                Console.WriteLine("\t Supprimer client (2)");
-                Console.WriteLine("\t Visualiser tous les clients (3)");
-                Console.WriteLine("\t\t - Afficher nombre de kilomètre parcouru par client (31)");
-                Console.WriteLine("\t\t - Afficher clients trié par leurs nombres de km parcouru (32)");
-                Console.WriteLine("\t\t - Afficher clients trié selon leurs noms (ASC) (33)");
-                Console.WriteLine("\t\t - Afficher clients trié selon leurs noms (DESC) (34)");
-                Console.WriteLine("\t\t - Chercher client par nom ou prenom (35)");
+                Console.WriteLine("\t Supprimer client (1)");
+                Console.WriteLine("\t Visualiser tous les clients (2)");
+                Console.WriteLine("\t\t - Afficher nombre de kilomètre parcouru par client (21)");
+                Console.WriteLine("\t\t - Afficher clients trié par leurs nombres de km parcouru (22)");
+                Console.WriteLine("\t\t - Afficher clients trié selon leurs noms (ASC) (23)");
+                Console.WriteLine("\t\t - Afficher clients trié selon leurs noms (DESC) (24)");
+                Console.WriteLine("\t\t - Chercher client par nom ou prenom (25)");
                 Console.WriteLine("\t Retourner au menu principal (e)\n");
                 Console.Write("Votre choix: ");
 
@@ -143,33 +181,29 @@ namespace projet_POO
                 switch (menu)
                 {
                     case "1":
-                        this.ajouter_client();
-                        break;
-
-                    case "2":
                         this.supprimer_client();
                         break;
 
-                    case "3":
+                    case "2":
                         this.affichage_list("Visualiser tous les clients", a.List_client);
                         Console.ReadLine();
                         break;
 
-                    case "31":
+                    case "21":
                         a.List_client.ForEach(c => Console.WriteLine("Client: " + c.nom + " " + c.prenom + " => " + c.nbr_km_parcouru + " Km parcourus"));
                         Console.ReadLine();
                         break;
 
-                    case "32":
+                    case "22":
                         a.List_client.Sort(delegate(Client a, Client b)
                         {
-                            return a.nbr_km_parcouru.CompareTo(b.nbr_km_parcouru);
+                            return -1 * a.nbr_km_parcouru.CompareTo(b.nbr_km_parcouru);
                         });
                         this.affichage_list("Listes des clients classés par leurs nombres de kilometre parcouru", a.List_client);
                         Console.ReadLine();
                         break;
 
-                    case "33":
+                    case "23":
                         a.List_client.Sort(delegate (Client a, Client b)
                         {
                             return a.nom.CompareTo(b.nom);
@@ -178,7 +212,7 @@ namespace projet_POO
                         Console.ReadLine();
                         break;
 
-                    case "34":
+                    case "24":
                         a.List_client.Sort(delegate (Client a, Client b)
                         {
                             return -1 * a.nom.CompareTo(b.nom);
@@ -187,7 +221,7 @@ namespace projet_POO
                         Console.ReadLine();
                         break;
 
-                    case "35":
+                    case "25":
                         Console.Write("\nNom ou prenom client recherché: ");
                         String nom = Console.ReadLine();
                         this.affichage_list("Liste de client trouvé :", a.List_client.FindAll(v => v.nom.ToLower() == nom.ToLower() || v.prenom.ToLower() == nom.ToLower()));
@@ -202,7 +236,7 @@ namespace projet_POO
             }
         }
 
-        public void menu_vehicule()
+        public void gerer_vehicule()
         {
             bool play = true;
 
@@ -284,7 +318,7 @@ namespace projet_POO
             }
         }
 
-        public void menu_trajet()
+        public void gerer_trajet()
         {
             bool play = true;
 
@@ -292,7 +326,7 @@ namespace projet_POO
             {
                 Console.Clear();
                 Console.WriteLine("MENU PRINCIPAL > MENU TRAJET \n");
-                Console.WriteLine("\t Ajouter trajet (1)");
+                //Console.WriteLine("\t Ajouter trajet (1)");
                 Console.WriteLine("\t Supprimer trajet (2)");
                 Console.WriteLine("\t Visualiser tous les trajets (3)");
                 Console.WriteLine("\t\t - Affiché tous les trajets triés selon leur ville depart (31)");
@@ -306,9 +340,9 @@ namespace projet_POO
 
                 switch (menu)
                 {
-                    case "1":
-                        this.ajouter_trajet();
-                        break;
+                    //case "1":
+                    //    this.ajouter_trajet();
+                    //    break;
 
                     case "2":
                         this.supprimer_trajet();
