@@ -11,6 +11,7 @@ namespace projet_POO
          * Class entièrement dédié à l'affichage
          */
         private Agence a;
+        private string typeConnexion;
 
         public Menu(Agence a)
         {
@@ -19,8 +20,9 @@ namespace projet_POO
 
         public void start()
         {
-            bool play = true;
             a.addData();
+            this.connexion();
+            bool play = true;
 
             while (play)
             {
@@ -29,7 +31,7 @@ namespace projet_POO
                 Console.WriteLine("\t Menu vehicule (1)");
                 Console.WriteLine("\t Menu client (2)");
                 Console.WriteLine("\t Menu trajet (3)");
-                Console.WriteLine("\t Exit (e)\n");
+                Console.WriteLine("\t Exit application (e)\n");
                 Console.Write("Votre choix: ");
 
                 string menu = Console.ReadLine();
@@ -49,8 +51,68 @@ namespace projet_POO
                         break;
 
                     case "e":
-                    default:
                         play = false;
+                        break;
+                }
+            }
+        }
+
+        public void connexion()
+        {
+            Console.Clear();
+            bool connected = true;
+            while (connected)
+            {
+                Console.Clear();
+                Console.WriteLine("Bienvenue dans le logiciel de gestion de flotte \n");
+                Console.WriteLine("Se connecter (1)");
+                Console.WriteLine("Créer un compte client(2)");
+                Console.WriteLine("Connexion administrateur (3)");
+                Console.Write("\nVotre choix: ");
+                string choix = Console.ReadLine();
+                switch (choix)
+                {
+                    case "1":
+                        Console.Clear();
+                        Console.Write("Identifiant: ");
+                        string ident = Console.ReadLine();
+                        Console.Write("Mot de passe: ");
+                        string mdp = Console.ReadLine();
+                        if(!a.checkClient(ident, mdp))
+                            Console.WriteLine("identifiant ou mot de pass incorrect !");
+                        else
+                        {
+                            Console.WriteLine("\nConnexion réussi ! Bienvenue " + ident + " !");
+                            this.typeConnexion = "client";
+                            connected = false;
+                        }
+                        
+                        System.Threading.Thread.Sleep(1000);
+                        break;
+
+                    case "2":
+                        this.créer_compte();
+                        this.typeConnexion = "client";
+                        connected = false;
+                        break;
+
+                    case "3":
+                        Console.Clear();
+                        Console.Write("Identifiant administrateur: ");
+                        string ident_admin = Console.ReadLine();
+                        Console.Write("Mot de passe admin: ");
+                        string mdp_admin = Console.ReadLine();
+                        if(a.checkAdmin(ident_admin, mdp_admin))
+                        {
+                            Console.WriteLine("\nConnexion en mode admin réussi !");
+                            this.typeConnexion = "admin";
+                            connected = false;
+                        }else Console.WriteLine("identifiant ou mot de pass incorrect !");
+
+                        System.Threading.Thread.Sleep(1000);
+                        break;
+
+                    default:
                         break;
                 }
             }
@@ -297,20 +359,46 @@ namespace projet_POO
             }
         }
 
-        // fonctions d'ajout
-        public void ajouter_client()
+        // creation_compte
+
+        public void créer_compte()
         {
             Console.Clear();
-            Console.WriteLine("MENU PRINCIPAL > MENU CLIENT > Formulaire d'ajout client \n");
+
             Console.Write("Nom client: ");
             String nom = Console.ReadLine();
 
             Console.Write("Prénom client: ");
             String prenom = Console.ReadLine();
 
-            a.ajouter_client(nom, prenom);
+            Console.Write("adresse email: ");
+            String email = Console.ReadLine();
+
+            Console.Write("Identifiant: ");
+            String identifiant = Console.ReadLine();
+
+            Console.Write("Mot de passe: ");
+            String mdp = Console.ReadLine();
+
+            a.ajouter_client(nom, prenom, email, identifiant, mdp);
             Console.WriteLine("Client créé avec succés!");
             System.Threading.Thread.Sleep(1000);
+        }
+
+        // fonctions d'ajout
+        public void ajouter_client()
+        {
+            //Console.Clear();
+            //Console.WriteLine("MENU PRINCIPAL > MENU CLIENT > Formulaire d'ajout client \n");
+            //Console.Write("Nom client: ");
+            //String nom = Console.ReadLine();
+
+            //Console.Write("Prénom client: ");
+            //String prenom = Console.ReadLine();
+
+            //a.ajouter_client(nom, prenom);
+            //Console.WriteLine("Client créé avec succés!");
+            //System.Threading.Thread.Sleep(1000);
         }
         public void ajouter_vehicule()
         {
@@ -381,7 +469,7 @@ namespace projet_POO
                 this.affichage_list("", a.List_client);
                 Console.Write("Indiquer le code client du client à supprimer: ");
                 string code = Console.ReadLine();
-                Client c = a.List_client.Find(client => client.CodeC == int.Parse(code));
+                Client c = a.List_client.Find(client => client.Identifiant == code);
                 if (c == null)
                     Console.WriteLine("Le code client que vous avait tapé n'existe pas");
                 else

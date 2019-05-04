@@ -10,11 +10,13 @@ namespace projet_POO
     {
         private List<Vehicule> list_vehicule = new List<Vehicule>();
         private List<Client> list_client = new List<Client>();
+        private Admin admin = new Admin();
         private List<Trajet> list_trajet = new List<Trajet>();
+        
 
-        public void ajouter_client(string nom, string prenom)
+        public void ajouter_client(string nom, string prenom, string email, string identifiant, string mdp)
         {
-            this.list_client.Add(new Client(nom, prenom));
+            this.list_client.Add(new Client(nom, prenom, email, identifiant, mdp));
         }
 
         public void ajouter_vehicule(string typeVehicule, string immat, string marque, int nbr_km_parcouru, float conso)
@@ -46,10 +48,12 @@ namespace projet_POO
         public void ajouter_trajet(string immat, string codeC, string ville_dep, string ville_arr, int km_trajet, float carburantPrix)
         {
             Vehicule v = this.list_vehicule.Find(vehicule => vehicule.immatriculation == immat);
-            Client c = this.list_client.Find(client => client.CodeC == int.Parse(codeC));
-            this.list_trajet.Add(new Trajet(v, c, ville_dep, ville_arr, km_trajet, carburantPrix));
+            Client c = this.list_client.Find(client => client.Identifiant == codeC);
+            Trajet t = new Trajet(v, c, ville_dep, ville_arr, km_trajet, carburantPrix);
+            this.list_trajet.Add(t);
             v.nbr_km_parcouru += km_trajet;
             c.nbr_km_parcouru += km_trajet;
+            c.Montant_location += t.cout_total();
         }
 
         public void supprimer_client(Client c)
@@ -66,23 +70,42 @@ namespace projet_POO
             this.list_trajet.Remove(t);
         }
 
-        //public List<Vehicule> getKmParcouruParVehicule(string marque)
-        //{
-        //    this.list_vehicule.ForEach(v => {
+        public bool checkClient(string ident, string clear_mdp)
+        {
+            var client = this.list_client.Find(c => c.checkConnexion(ident, clear_mdp));
+            return client != null;
+        }
+        public bool checkAdmin(string ident, string clear_mdp)
+        {
+            return this.admin.checkConnexion(ident, clear_mdp);
+        }
 
-        //    });
-        //}
+        public string EncryptPassword(string textPassword)
+        {
+            //Crypter le mot de passe          
+            byte[] passBytes = System.Text.Encoding.Unicode.GetBytes(textPassword);
+            string encryptPass = Convert.ToBase64String(passBytes);
+            return encryptPass;
+        }
+
+        public string DecryptPassword(string encryptedPassword)
+        {
+            //Decrypter le mot de passe    
+            byte[] passByteData = Convert.FromBase64String(encryptedPassword);
+            string originalPassword = System.Text.Encoding.Unicode.GetString(passByteData);
+            return originalPassword;
+        }
 
         public void addData()
         {
-            this.list_client.Add(new Client("Fernandez casa", "Gabriel"));
-            this.list_client.Add(new Client("Valentin", "Fernandez casa"));
-            this.list_client.Add(new Client("Lucy", "VANG"));
-            this.list_client.Add(new Client("Au", "LEE"));
-            this.list_client.Add(new Client("raph", "Gabriel"));
-            this.list_client.Add(new Client("Valentin", "gabriel"));
-            this.list_client.Add(new Client("Lucy", "VANGgggg"));
-            this.list_client.Add(new Client("Augustin", "gabriel"));
+            this.list_client.Add(new Client("Fernandez casa", "Gabriel", "email", "1" , "demo"));
+            this.list_client.Add(new Client("Valentin", "Fernandez casa", "email", "2", "demo"));
+            this.list_client.Add(new Client("Lucy", "VANG", "email", "3", "demo"));
+            this.list_client.Add(new Client("Au", "LEE", "email", "4", "demo"));
+            this.list_client.Add(new Client("raph", "Gabriel", "email", "5", "demo"));
+            this.list_client.Add(new Client("Valentin", "gabriel", "email", "6", "demo"));
+            this.list_client.Add(new Client("Lucy", "VANGgggg", "email", "7", "demo"));
+            this.list_client.Add(new Client("Augustin", "gabriel", "email", "8", "demo"));
 
 
             this.list_vehicule.Add(new Camion("123", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
