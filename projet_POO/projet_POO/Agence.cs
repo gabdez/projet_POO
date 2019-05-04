@@ -29,7 +29,7 @@ namespace projet_POO
             this.list_client.Add(new Client(nom, prenom, email, identifiant, mdp));
         }
 
-        public void ajouter_vehicule(string typeVehicule, string immat, string marque, int nbr_km_parcouru, float conso)
+        public void ajouter_vehicule(string typeVehicule, string immat, string marque, int nbr_km_parcouru, float conso,int volume)
         {
             Vehicule v = null;
 
@@ -44,8 +44,6 @@ namespace projet_POO
                     break;
 
                 case "3":
-                    Console.Write("Le volume de chargement de votre camion: ");
-                    int volume = int.Parse(Console.ReadLine());
                     v = new Camion(immat, marque, nbr_km_parcouru, conso, volume, Vehicule.Tcarburant.sansPlomb95);
                     break;
 
@@ -55,7 +53,6 @@ namespace projet_POO
             }
             this.list_vehicule.Add(v);
             this.affecterVehiculeControleur(v);
-            Console.ReadLine();
         }
 
         private void affecterVehiculeControleur(Vehicule v)

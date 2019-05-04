@@ -453,7 +453,14 @@ namespace projet_POO
             Console.Write("Consommation L/100km : ");
             float conso = float.Parse(Console.ReadLine());
 
-            a.ajouter_vehicule(typeVehicule, immat, marque, prix_achat, conso);
+            int volume = 0;
+            if (typeVehicule == "3")
+            {
+                Console.Write("Le volume de chargement de votre camion: ");
+                volume = int.Parse(Console.ReadLine());
+            }
+
+            a.ajouter_vehicule(typeVehicule, immat, marque, prix_achat, conso, volume);
             Console.WriteLine("vehicule créé avec succés!");
             System.Threading.Thread.Sleep(1000);
         }
@@ -533,7 +540,10 @@ namespace projet_POO
                 string immat = Console.ReadLine();
                 Vehicule v = a.List_vehicule.Find(vehicule => vehicule.immatriculation == immat);
                 if (v == null)
+                {
                     Console.WriteLine("L'immatriculation du vehicule que vous avait tapé n'existe pas");
+                    System.Threading.Thread.Sleep(1000);
+                }
                 else
                 {
                     a.supprimer_vehicule(v);
