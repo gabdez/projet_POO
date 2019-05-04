@@ -47,6 +47,7 @@
     <Compile Include="Agence.cs" />
     <Compile Include="Camion.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="Controleur.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Moto.cs" />
     <Compile Include="Program.cs" />

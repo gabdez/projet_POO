@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,9 +9,20 @@ namespace projet_POO
     {
         private List<Vehicule> list_vehicule = new List<Vehicule>();
         private List<Client> list_client = new List<Client>();
+        private Controleur[] array_controleurs = new Controleur[3];
         private Admin admin = new Admin();
         private List<Trajet> list_trajet = new List<Trajet>();
         
+        public Agence()
+        {
+            // initialisation controleur
+            this.array_controleurs = new Controleur[3]
+            {
+                new Controleur("c1", "controleur"),
+                new Controleur("c2", "controleur"),
+                new Controleur("c3", "controleur"),
+            };
+        }
 
         public void ajouter_client(string nom, string prenom, string email, string identifiant, string mdp)
         {
@@ -44,7 +54,21 @@ namespace projet_POO
                     break;
             }
             this.list_vehicule.Add(v);
+            this.affecterVehiculeControleur(v);
+            Console.ReadLine();
         }
+
+        private void affecterVehiculeControleur(Vehicule v)
+        {
+            int index = 0;
+            for (int i = 0; i <= 2; i++)
+            {
+                if (this.array_controleurs[i].List_VMaintenance.Count < this.array_controleurs[index].List_VMaintenance.Count)
+                    index = i;
+            }
+            this.array_controleurs[index].List_VMaintenance.Add(v);
+        }
+
         public void ajouter_trajet(string immat, string codeC, string ville_dep, string ville_arr, int km_trajet, float carburantPrix)
         {
             Vehicule v = this.list_vehicule.Find(vehicule => vehicule.immatriculation == immat);
