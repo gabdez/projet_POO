@@ -14,9 +14,9 @@ namespace projet_POO
         private string depart;
         private string arrivé;
         private float nbr_km;
-        private float prix_carburant;
+        private double prix_carburant;
 
-        public Trajet(Vehicule v, Client c,string depart, string arrivé, float nbr_km, float prixCarburantKm)
+        public Trajet(Vehicule v, Client c,string depart, string arrivé, float nbr_km, double prixCarburantKm)
         {
             this.codeT = ++counter;
             this.v = v;
@@ -28,7 +28,7 @@ namespace projet_POO
         }
 
         //nombre de kilomètres x consommation moyenne du véhicule L/100km x prix d'un litre de carburant en euro
-        public float cout_total()
+        public double cout_total()
         {
             return this.nbr_km * v.conso_km * this.prix_carburant;
         }

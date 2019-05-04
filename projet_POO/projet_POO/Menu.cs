@@ -11,7 +11,7 @@ namespace projet_POO
          * Class entièrement dédié à l'affichage
          */
         private Agence a;
-        private string typeConnexion;
+        private Utilisateur utilisateur; // utilisateur connecté
 
         public Menu(Agence a)
         {
@@ -22,7 +22,7 @@ namespace projet_POO
         {
             a.addData();
             this.connexion();
-            if (this.typeConnexion == "admin") this.menu_admin();
+            if (this.utilisateur.getType() == "admin") this.menu_admin();
             else this.menu_client();
         }
 
@@ -33,10 +33,11 @@ namespace projet_POO
             while (connected)
             {
                 Console.Clear();
-                Console.WriteLine("Bienvenue dans le logiciel de gestion de flotte \n");
+                Console.WriteLine("Bienvenue dans votre logiciel de location \n");
                 Console.WriteLine("Se connecter (1)");
                 Console.WriteLine("Créer un compte client(2)");
-                Console.WriteLine("Connexion administrateur (3)");
+                Console.WriteLine("Connexion controleur (3)");
+                Console.WriteLine("Connexion administrateur (4)");
                 Console.Write("\nVotre choix: ");
                 string choix = Console.ReadLine();
                 switch (choix)
@@ -47,12 +48,12 @@ namespace projet_POO
                         string ident = Console.ReadLine();
                         Console.Write("Mot de passe: ");
                         string mdp = Console.ReadLine();
-                        if (!a.checkClient(ident, mdp))
+                        this.utilisateur = a.checkClient(ident, mdp);
+                        if (this.utilisateur == null)
                             Console.WriteLine("identifiant ou mot de pass incorrect !");
                         else
                         {
                             Console.WriteLine("\nConnexion réussi ! Bienvenue " + ident + " !");
-                            this.typeConnexion = "client";
                             connected = false;
                         }
 
@@ -61,20 +62,36 @@ namespace projet_POO
 
                     case "2":
                         this.créer_compte();
-                        this.typeConnexion = "client";
                         connected = false;
                         break;
 
                     case "3":
                         Console.Clear();
                         Console.Write("Identifiant administrateur: ");
+                        string ident_controleur = Console.ReadLine();
+                        Console.Write("Mot de passe admin: ");
+                        string mdp_controleur = Console.ReadLine();
+                        this.utilisateur = a.checkAdmin(ident_controleur, mdp_controleur);
+                        if (this.utilisateur != null)
+                        {
+                            Console.WriteLine("\nConnexion en mode controleur réussi !");
+                            connected = false;
+                        }
+                        else Console.WriteLine("identifiant ou mot de pass incorrect !");
+
+                        System.Threading.Thread.Sleep(1000);
+                        break;
+
+                    case "4":
+                        Console.Clear();
+                        Console.Write("Identifiant administrateur: ");
                         string ident_admin = Console.ReadLine();
                         Console.Write("Mot de passe admin: ");
                         string mdp_admin = Console.ReadLine();
-                        if (a.checkAdmin(ident_admin, mdp_admin))
+                        this.utilisateur = a.checkAdmin(ident_admin, mdp_admin);
+                        if (this.utilisateur != null)
                         {
                             Console.WriteLine("\nConnexion en mode admin réussi !");
-                            this.typeConnexion = "admin";
                             connected = false;
                         }
                         else Console.WriteLine("identifiant ou mot de pass incorrect !");
@@ -134,7 +151,8 @@ namespace projet_POO
                 Console.Clear();
                 Console.WriteLine("MENU PRINCIPAL\n");
                 Console.WriteLine("\t Louer un vehicule (1)");
-                Console.WriteLine("\t Mes commandes (2)");
+                Console.WriteLine("\t Mes trajets (2)");
+                Console.WriteLine("\t voir vehicule dispo (3)");
                 Console.WriteLine("\t Exit application (e)\n");
                 Console.Write("Votre choix: ");
 
@@ -143,13 +161,18 @@ namespace projet_POO
                 switch (menu)
                 {
                     case "1":
-                        this.gerer_vehicule();
+                        this.louer_vehicule();
                         break;
 
                     case "2":
                         this.gerer_client();
                         break;
 
+                    case "3":
+                        this.affichage_list("Visualiser tous les vehicules dispo", a.List_vehicule.FindAll(v => v.dispo == Vehicule.Dispo.disponible));
+                        Console.ReadLine();
+                        break;
+                        
                     case "e":
                         play = false;
                         break;
@@ -415,6 +438,7 @@ namespace projet_POO
             String mdp = Console.ReadLine();
 
             a.ajouter_client(nom, prenom, email, identifiant, mdp);
+            this.utilisateur = a.checkClient(identifiant, mdp);
             Console.WriteLine("Client créé avec succés!");
             System.Threading.Thread.Sleep(1000);
         }
@@ -459,23 +483,51 @@ namespace projet_POO
                 Console.Write("Le volume de chargement de votre camion: ");
                 volume = int.Parse(Console.ReadLine());
             }
+            
+            this.affichage_list("", a.List_parkings);
+            Console.Write("Renseignez le code du parking du vehicule : ");
+            int codeP = int.Parse(Console.ReadLine());
+            if (a.List_parkings.Find(p => p.CodeP == codeP).estComplet())
+            {
+                Console.WriteLine("Ce parking est complet");
+                System.Threading.Thread.Sleep(1000);
+                return;
+            }
+                
 
-            a.ajouter_vehicule(typeVehicule, immat, marque, prix_achat, conso, volume);
+            Vehicule v = null;
+
+            switch (Vehicule.getTVehicule(typeVehicule))
+            {
+                case Vehicule.TVehicule.voiture:
+                    v = new Voiture(immat, marque, prix_achat, conso, Vehicule.Tcarburant.sansPlomb95);
+                    break;
+
+                case Vehicule.TVehicule.moto:
+                    v = new Moto(immat, marque, prix_achat, conso, Vehicule.Tcarburant.sansPlomb95);
+                    break;
+
+                case Vehicule.TVehicule.camion:
+                    v = new Camion(immat, marque, prix_achat, conso, volume, Vehicule.Tcarburant.sansPlomb95);
+                    break;
+
+                default:
+                    v = new Voiture(immat, marque, prix_achat, conso, Vehicule.Tcarburant.sansPlomb95);
+                    break;
+            }
+
+            a.ajouter_vehicule(v, codeP);
             Console.WriteLine("vehicule créé avec succés!");
             System.Threading.Thread.Sleep(1000);
         }
         public void ajouter_trajet()
         {
             Console.Clear();
-            Console.WriteLine("MENU PRINCIPAL > MENU TRAJET > Formulaire d'ajout trajet");
+            Console.WriteLine("Formulaire d'ajout trajet");
             this.affichage_list("", a.List_vehicule);
 
-            Console.Write("\nIndiquer l'immatriculation du véhicule effectuant le trajet: ");
-            string immat = Console.ReadLine();
-
-            this.affichage_list("", a.List_client);
-            Console.Write("\nIndiquer le code client du client effectuant le trajet: ");
-            string codeC = Console.ReadLine();
+            Console.Write("\nChoisissez votre type de vehicule: voiture(1), moto (2), camion(3)");
+            string type = Console.ReadLine();
 
             Console.Write("Indiquer la ville de départ du trajet: ");
             string ville_dep = Console.ReadLine();
@@ -489,7 +541,34 @@ namespace projet_POO
             Console.Write("Indiquer le prix du carburant pour 1L: ");
             float carburantPrix = float.Parse(Console.ReadLine());
 
-            a.ajouter_trajet(immat, codeC, ville_dep, ville_arr, km_trajet, carburantPrix);
+            a.ajouter_trajet(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, ville_dep, ville_arr, km_trajet);
+            Console.WriteLine("trajet créé avec succés!");
+            System.Threading.Thread.Sleep(1000);
+        }
+
+        public void louer_vehicule()
+        {
+            if (!a.List_vehicule.Exists(v => v.dispo == Vehicule.Dispo.disponible))
+            {
+                Console.WriteLine("Il n'y a pas de véhicule à louer ! Demander aux admninistrateurs d'en rajouter");
+                Console.ReadLine();
+                return;
+            }
+            Console.Clear();
+            Console.WriteLine("Formulaire de location véhicule");
+            Console.Write("\nChoisissez votre type de vehicule: voiture(1), moto (2), camion(3): ");
+            string type = Console.ReadLine();
+
+            Console.Write("Indiquer la ville de départ du trajet: ");
+            string ville_dep = Console.ReadLine();
+
+            Console.Write("Indiquer la ville d'arrivée du trajet: ");
+            string ville_arr = Console.ReadLine();
+
+            Console.Write("Indiquer le nombre de km du trajet: ");
+            int km_trajet = int.Parse(Console.ReadLine());
+
+            a.ajouter_trajet(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, ville_dep, ville_arr, km_trajet);
             Console.WriteLine("trajet créé avec succés!");
             System.Threading.Thread.Sleep(1000);
         }

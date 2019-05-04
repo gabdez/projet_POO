@@ -9,19 +9,27 @@ namespace projet_POO
     {
         private List<Vehicule> list_vehicule = new List<Vehicule>();
         private List<Client> list_client = new List<Client>();
+        private List<Trajet> list_trajet = new List<Trajet>();
+        private List<Parking> list_parkings = new List<Parking>();
         private Controleur[] array_controleurs = new Controleur[3];
         private Admin admin = new Admin();
-        private List<Trajet> list_trajet = new List<Trajet>();
-        
-        public Agence()
+        private static Agence instance = null;
+
+        private Agence()
         {
-            // initialisation controleur
+            // initialisation controleur et parking
             this.array_controleurs = new Controleur[3]
             {
                 new Controleur("c1", "controleur"),
                 new Controleur("c2", "controleur"),
                 new Controleur("c3", "controleur"),
             };
+            for(int i = 0; i <= 20; i++)
+            {
+                this.list_parkings.Add(new Parking("Arrondissement " + i));
+            }
+            this.list_parkings.Add(new Parking("Roissy"));
+            this.list_parkings.Add(new Parking("Orly"));
         }
 
         public void ajouter_client(string nom, string prenom, string email, string identifiant, string mdp)
@@ -29,30 +37,11 @@ namespace projet_POO
             this.list_client.Add(new Client(nom, prenom, email, identifiant, mdp));
         }
 
-        public void ajouter_vehicule(string typeVehicule, string immat, string marque, int nbr_km_parcouru, float conso,int volume)
+        public void ajouter_vehicule(Vehicule v, int cParking)
         {
-            Vehicule v = null;
-
-            switch (typeVehicule)
-            {
-                case "1":
-                    v = new Voiture(immat, marque, nbr_km_parcouru,conso,Vehicule.Tcarburant.sansPlomb95);
-                    break;
-
-                case "2":
-                    v = new Moto(immat, marque, nbr_km_parcouru, conso, Vehicule.Tcarburant.sansPlomb95);
-                    break;
-
-                case "3":
-                    v = new Camion(immat, marque, nbr_km_parcouru, conso, volume, Vehicule.Tcarburant.sansPlomb95);
-                    break;
-
-                default:
-                    v = new Voiture(immat, marque, nbr_km_parcouru, conso, Vehicule.Tcarburant.sansPlomb95);
-                    break;
-            }
             this.list_vehicule.Add(v);
             this.affecterVehiculeControleur(v);
+            this.affecterVehiculeParking(v, cParking);
         }
 
         private void affecterVehiculeControleur(Vehicule v)
@@ -65,14 +54,19 @@ namespace projet_POO
             }
             this.array_controleurs[index].List_VMaintenance.Add(v);
         }
-
-        public void ajouter_trajet(string immat, string codeC, string ville_dep, string ville_arr, int km_trajet, float carburantPrix)
+        private void affecterVehiculeParking(Vehicule v, int cParking)
         {
-            Vehicule v = this.list_vehicule.Find(vehicule => vehicule.immatriculation == immat);
-            Client c = this.list_client.Find(client => client.Identifiant == codeC);
-            Trajet t = new Trajet(v, c, ville_dep, ville_arr, km_trajet, carburantPrix);
+            this.list_parkings[cParking - 1].addVehicule(v);
+        }
+
+        public void ajouter_trajet(Vehicule.TVehicule tVehicule, string identifiant, string ville_dep, string ville_arr, int km_trajet)
+        {
+            Vehicule veh = this.list_vehicule.Find(v => v.dispo == Vehicule.Dispo.disponible && v.typeV == tVehicule);
+            Client c = this.list_client.Find(client => client.Identifiant == identifiant);
+            Trajet t = new Trajet(veh, c, ville_dep, ville_arr, km_trajet, Vehicule.getPrixCarburant(veh.Carb));
             this.list_trajet.Add(t);
-            v.nbr_km_parcouru += km_trajet;
+            veh.dispo = Vehicule.Dispo.loué;
+            veh.nbr_km_parcouru += km_trajet;
             c.nbr_km_parcouru += km_trajet;
             c.Montant_location += t.cout_total();
         }
@@ -91,63 +85,49 @@ namespace projet_POO
             this.list_trajet.Remove(t);
         }
 
-        public bool checkClient(string ident, string clear_mdp)
+        public Utilisateur checkClient(string ident, string clear_mdp)
         {
-            var client = this.list_client.Find(c => c.checkConnexion(ident, clear_mdp));
-            return client != null;
+            return this.list_client.Find(c => c.checkConnexion(ident, clear_mdp));
         }
-        public bool checkAdmin(string ident, string clear_mdp)
+        public Utilisateur checkAdmin(string ident, string clear_mdp)
         {
-            return this.admin.checkConnexion(ident, clear_mdp);
-        }
-
-        public string EncryptPassword(string textPassword)
-        {
-            //Crypter le mot de passe          
-            byte[] passBytes = System.Text.Encoding.Unicode.GetBytes(textPassword);
-            string encryptPass = Convert.ToBase64String(passBytes);
-            return encryptPass;
-        }
-
-        public string DecryptPassword(string encryptedPassword)
-        {
-            //Decrypter le mot de passe    
-            byte[] passByteData = Convert.FromBase64String(encryptedPassword);
-            string originalPassword = System.Text.Encoding.Unicode.GetString(passByteData);
-            return originalPassword;
+            return this.admin.checkConnexion(ident, clear_mdp) ? this.admin : null; ;
         }
 
         public void addData()
         {
-            this.list_client.Add(new Client("Fernandez casa", "Gabriel", "email", "1" , "demo"));
-            this.list_client.Add(new Client("Valentin", "Fernandez casa", "email", "2", "demo"));
-            this.list_client.Add(new Client("Lucy", "VANG", "email", "3", "demo"));
-            this.list_client.Add(new Client("Au", "LEE", "email", "4", "demo"));
-            this.list_client.Add(new Client("raph", "Gabriel", "email", "5", "demo"));
-            this.list_client.Add(new Client("Valentin", "gabriel", "email", "6", "demo"));
-            this.list_client.Add(new Client("Lucy", "VANGgggg", "email", "7", "demo"));
-            this.list_client.Add(new Client("Augustin", "gabriel", "email", "8", "demo"));
+            this.ajouter_client("Fernandez casa", "Gabriel", "email", "1" , "demo");
+            this.ajouter_client("Valentin", "Fernandez casa", "email", "2", "demo");
+            this.ajouter_client("Lucy", "VANG", "email", "3", "demo");
+            this.ajouter_client("Au", "LEE", "email", "4", "demo");
+            this.ajouter_client("raph", "Gabriel", "email", "5", "demo");
+            this.ajouter_client("Valentin", "gabriel", "email", "6", "demo");
+            this.ajouter_client("Lucy", "VANGgggg", "email", "7", "demo");
+            this.ajouter_client("Augustin", "gabriel", "email", "8", "demo");
 
 
-            this.list_vehicule.Add(new Camion("123", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
-            this.list_vehicule.Add(new Moto("456", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
-            this.list_vehicule.Add(new Voiture("789", "Audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
-            this.list_vehicule.Add(new Camion("1273", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
-            this.list_vehicule.Add(new Moto("4576", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
-            this.list_vehicule.Add(new Voiture("7789", "audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
-            this.list_vehicule.Add(new Camion("1243", "Renault", 200000, 8, 10, Vehicule.Tcarburant.diesel));
-            this.list_vehicule.Add(new Moto("4516", "BMW", 200000, 9, Vehicule.Tcarburant.sansPlomb95));
-            this.list_vehicule.Add(new Voiture("7289", "audi", 200000, 4, Vehicule.Tcarburant.sansPlomb95));
+            this.ajouter_vehicule(new Voiture("123", "Renault", 200000, 8, Vehicule.Tcarburant.sansPlomb95), 1);
+            this.ajouter_vehicule(new Moto( "456", "BMW", 200000, 9, Vehicule.Tcarburant.gazole), 2);
+            this.ajouter_vehicule(new Camion("789", "Audi", 200000, 4,10, Vehicule.Tcarburant.sansPlomb95),3);
+            this.ajouter_vehicule(new Camion("1273", "Renault", 200000, 8, 0, Vehicule.Tcarburant.sansPlomb95), 4);
+            this.ajouter_vehicule(new Moto("4576", "BMW", 200000, 9,0), 8);
+            this.ajouter_vehicule(new Voiture("7789", "audi", 200000, 4, Vehicule.Tcarburant.sansPlomb98), 9);
+            this.ajouter_vehicule(new Voiture("1243", "Renault", 200000, 8,Vehicule.Tcarburant.sansPlomb98), 5);
+            this.ajouter_vehicule(new Camion("4516", "BMW", 200000, 9,25,Vehicule.Tcarburant.sansPlomb98), 1);
+            this.ajouter_vehicule(new Moto("7289", "audi", 200000, 4,0), 1);
 
-            this.ajouter_trajet("123", "4", "HR", "Cergy", 100, 6);
-            this.ajouter_trajet("456", "3", "Cergy", "paris", 500, 6);
-            this.ajouter_trajet("789", "1", "Paris", "HR", 80, 6);
-            this.ajouter_trajet("789", "5", "paris", "Cergy", 80, 6);
-            this.ajouter_trajet("1273", "2", "marseille", "Lyon", 400, 6);
-            this.ajouter_trajet("4576", "6", "avranche", "brest", 350, 6);
-            this.ajouter_trajet("1243", "7", "Lyon", "HR", 600, 6);
-            this.ajouter_trajet("7289", "1", "bordeau", "Nice", 300, 6);
+            this.ajouter_trajet(Vehicule.TVehicule.camion, "4", "HR", "Cergy", 100);
+            this.ajouter_trajet(Vehicule.TVehicule.moto, "3", "Cergy", "paris", 500);
+            this.ajouter_trajet(Vehicule.TVehicule.voiture, "1", "Paris", "HR", 80);
+            this.ajouter_trajet(Vehicule.TVehicule.voiture, "5", "paris", "Cergy", 80);
+            this.ajouter_trajet(Vehicule.TVehicule.voiture, "2", "marseille", "Lyon", 400);
+            this.ajouter_trajet(Vehicule.TVehicule.camion, "6", "avranche", "brest", 350);
+            this.ajouter_trajet(Vehicule.TVehicule.camion, "6", "brest", "avranche", 400);
+            this.ajouter_trajet(Vehicule.TVehicule.moto, "7", "Lyon", "HR", 700);
+            this.ajouter_trajet(Vehicule.TVehicule.moto, "1", "bordeau", "Nice", 300);
         }
+        
+        
 
         public List<Vehicule> List_vehicule
         {
@@ -168,6 +148,24 @@ namespace projet_POO
             get
             {
                 return this.list_trajet;
+            }
+        }
+        public List<Parking> List_parkings
+        {
+            get
+            {
+                return this.list_parkings;
+            }
+        }
+        public static Agence Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Agence();
+                }
+                return instance;
             }
         }
     }

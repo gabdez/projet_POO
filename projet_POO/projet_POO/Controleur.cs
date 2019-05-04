@@ -18,7 +18,7 @@ namespace projet_POO
 
         public override string getType()
         {
-            return "Controleur";
+            return "controleur";
         }
 
         public List<Vehicule> List_VMaintenance

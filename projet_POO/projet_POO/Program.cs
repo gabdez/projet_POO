@@ -10,7 +10,7 @@ namespace projet_POO
     {
         static void Main(string[] args)
         {
-            Menu m = new Menu(new Agence());
+            Menu m = new Menu(Agence.Instance);
             m.start();
         }
     }

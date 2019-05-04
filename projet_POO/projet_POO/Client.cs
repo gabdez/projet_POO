@@ -28,14 +28,6 @@ namespace projet_POO
                 " ; Nombre de kilomètre parcouru : " + this.nbr_km_parcouru;
         }
 
-        public string Identifiant
-        {
-            get
-            {
-                return this.identifiant;
-            }
-        }
-
         public int categorie()
         {
             if (this.montant_location > 10000) return 1;

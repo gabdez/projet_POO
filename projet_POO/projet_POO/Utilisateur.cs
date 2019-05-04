@@ -16,5 +16,13 @@ namespace projet_POO
             return this.identifiant == identifiant && this.mdp == mdp;
         }
         public abstract string getType();
+
+        public String Identifiant
+        {
+            get
+            {
+                return this.identifiant;
+            }
+        }
     }
 }

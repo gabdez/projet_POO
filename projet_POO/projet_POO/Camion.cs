@@ -17,7 +17,7 @@ namespace projet_POO
             this.conso_km = conso_km;
             this.volume = volume;
             this.nbr_roues = 6;
-            this.typeV = "camion";
+            this.typeV = Vehicule.TVehicule.camion;
             this.nbr_km_parcouru = 0;
             this.Carb = carb;
         }

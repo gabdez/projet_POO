@@ -15,7 +15,7 @@ namespace projet_POO
             this.prix_achat = prix_achat;
             this.conso_km = conso_km;
             this.nbr_roues = 2;
-            this.typeV = "moto";
+            this.typeV = Vehicule.TVehicule.moto;
             this.nbr_km_parcouru = 0;
             this.Carb = carb;
         }
