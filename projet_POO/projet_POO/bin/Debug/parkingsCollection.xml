@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ArrayOfParking xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Parking>
+    <codeP>1</codeP>
+    <emplacement>Arrondissement 0</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>2</codeP>
+    <emplacement>Arrondissement 1</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>3</codeP>
+    <emplacement>Arrondissement 2</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>4</codeP>
+    <emplacement>Arrondissement 3</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>5</codeP>
+    <emplacement>Arrondissement 4</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>6</codeP>
+    <emplacement>Arrondissement 5</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>7</codeP>
+    <emplacement>Arrondissement 6</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>8</codeP>
+    <emplacement>Arrondissement 7</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>9</codeP>
+    <emplacement>Arrondissement 8</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>10</codeP>
+    <emplacement>Arrondissement 9</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>11</codeP>
+    <emplacement>Arrondissement 10</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>12</codeP>
+    <emplacement>Arrondissement 11</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>13</codeP>
+    <emplacement>Arrondissement 12</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>14</codeP>
+    <emplacement>Arrondissement 13</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>15</codeP>
+    <emplacement>Arrondissement 14</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>16</codeP>
+    <emplacement>Arrondissement 15</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>17</codeP>
+    <emplacement>Arrondissement 16</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>18</codeP>
+    <emplacement>Arrondissement 17</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>19</codeP>
+    <emplacement>Arrondissement 18</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>20</codeP>
+    <emplacement>Arrondissement 19</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>21</codeP>
+    <emplacement>Arrondissement 20</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>22</codeP>
+    <emplacement>Roissy</emplacement>
+  </Parking>
+  <Parking>
+    <codeP>23</codeP>
+    <emplacement>Orly</emplacement>
+  </Parking>
+</ArrayOfParking>

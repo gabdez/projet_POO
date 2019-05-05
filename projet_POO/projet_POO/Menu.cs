@@ -21,12 +21,19 @@ namespace projet_POO
         public void start()
         {
             a.addData();
-            this.connexion();
-            if (this.utilisateur.getType() == "admin") this.menu_admin();
-            else this.menu_client();
+            bool play = true;
+            while (play) {
+                this.connexion(ref play);
+                if (play == true)
+                {
+                    if (this.utilisateur.getType() == "admin") this.menu_admin();
+                    else if (this.utilisateur.getType() == "client") this.menu_client();
+                    else this.menu_controleur();
+                }
+            }
         }
 
-        public void connexion()
+        public void connexion(ref bool play)
         {
             Console.Clear();
             bool connected = true;
@@ -34,21 +41,24 @@ namespace projet_POO
             {
                 Console.Clear();
                 Console.WriteLine("Bienvenue dans votre logiciel de location \n");
-                Console.WriteLine("Se connecter (1)");
-                Console.WriteLine("Créer un compte client(2)");
+                Console.WriteLine("Connexion client (1)");
+                Console.WriteLine("Connexion administrateur (2)");
                 Console.WriteLine("Connexion controleur (3)");
-                Console.WriteLine("Connexion administrateur (4)");
+                Console.WriteLine("Créer un compte client(4)");
+                Console.WriteLine("Exit application (e)");
                 Console.Write("\nVotre choix: ");
                 string choix = Console.ReadLine();
                 switch (choix)
                 {
                     case "1":
+                    case "2":
+                    case "3":
                         Console.Clear();
                         Console.Write("Identifiant: ");
                         string ident = Console.ReadLine();
                         Console.Write("Mot de passe: ");
                         string mdp = Console.ReadLine();
-                        this.utilisateur = a.checkClient(ident, mdp);
+                        this.utilisateur = a.checkUtilisateur(ident, mdp, int.Parse(choix));
                         if (this.utilisateur == null)
                             Console.WriteLine("identifiant ou mot de pass incorrect !");
                         else
@@ -60,44 +70,15 @@ namespace projet_POO
                         System.Threading.Thread.Sleep(1000);
                         break;
 
-                    case "2":
+                    case "4":
                         this.créer_compte();
                         connected = false;
                         break;
 
-                    case "3":
-                        Console.Clear();
-                        Console.Write("Identifiant administrateur: ");
-                        string ident_controleur = Console.ReadLine();
-                        Console.Write("Mot de passe admin: ");
-                        string mdp_controleur = Console.ReadLine();
-                        this.utilisateur = a.checkAdmin(ident_controleur, mdp_controleur);
-                        if (this.utilisateur != null)
-                        {
-                            Console.WriteLine("\nConnexion en mode controleur réussi !");
-                            connected = false;
-                        }
-                        else Console.WriteLine("identifiant ou mot de pass incorrect !");
-
-                        System.Threading.Thread.Sleep(1000);
-                        break;
-
-                    case "4":
-                        Console.Clear();
-                        Console.Write("Identifiant administrateur: ");
-                        string ident_admin = Console.ReadLine();
-                        Console.Write("Mot de passe admin: ");
-                        string mdp_admin = Console.ReadLine();
-                        this.utilisateur = a.checkAdmin(ident_admin, mdp_admin);
-                        if (this.utilisateur != null)
-                        {
-                            Console.WriteLine("\nConnexion en mode admin réussi !");
-                            connected = false;
-                        }
-                        else Console.WriteLine("identifiant ou mot de pass incorrect !");
-
-                        System.Threading.Thread.Sleep(1000);
-                        break;
+                    case "e":
+                        play = false;
+                        connected = false;
+                        return;
 
                     default:
                         break;
@@ -116,7 +97,7 @@ namespace projet_POO
                 Console.WriteLine("\t Gérer les vehicules (1)");
                 Console.WriteLine("\t Gérer les clients (2)");
                 Console.WriteLine("\t Gérer les trajets (3)");
-                Console.WriteLine("\t Exit application (e)\n");
+                Console.WriteLine("\t Déconnexion (e)\n");
                 Console.Write("Votre choix: ");
 
                 string menu = Console.ReadLine();
@@ -152,8 +133,8 @@ namespace projet_POO
                 Console.WriteLine("MENU PRINCIPAL\n");
                 Console.WriteLine("\t Louer un vehicule (1)");
                 Console.WriteLine("\t Mes trajets (2)");
-                Console.WriteLine("\t voir vehicule dispo (3)");
-                Console.WriteLine("\t Exit application (e)\n");
+                Console.WriteLine("\t Voir vehicule disponible (3)");
+                Console.WriteLine("\t Deconnexion (e)\n");
                 Console.Write("Votre choix: ");
 
                 string menu = Console.ReadLine();
@@ -165,7 +146,8 @@ namespace projet_POO
                         break;
 
                     case "2":
-                        this.gerer_client();
+                        this.affichage_list("Mes trajets", a.List_trajet.FindAll(t => t.clientTrajet.Identifiant == this.utilisateur.Identifiant));
+                        Console.ReadLine();
                         break;
 
                     case "3":
@@ -173,6 +155,40 @@ namespace projet_POO
                         Console.ReadLine();
                         break;
                         
+                    case "e":
+                        play = false;
+                        break;
+                }
+            }
+        }
+
+        public void menu_controleur()
+        {
+            bool play = true;
+
+            while (play)
+            {
+                Console.Clear();
+                Console.WriteLine("MENU PRINCIPAL\n");
+                Console.WriteLine("\t Visualiser mes véhicules affectés (1)");
+                Console.WriteLine("\t Vérifier un véhicule (2)");
+                Console.WriteLine("\t Deconnexion (e)\n");
+                Console.Write("Votre choix: ");
+
+                string menu = Console.ReadLine();
+
+                switch (menu)
+                {
+                    case "1":
+                        this.affichage_list("Mes véhicules affectés", a.getListVehiculeControleur(this.utilisateur.Identifiant));
+                        Console.ReadLine();
+                        break;
+
+                    case "2":
+                        this.verification_vehicule();
+                        Console.ReadLine();
+                        break;
+
                     case "e":
                         play = false;
                         break;
@@ -269,12 +285,13 @@ namespace projet_POO
                 Console.WriteLine("MENU PRINCIPAL > MENU VEHICULE \n");
                 Console.WriteLine("\t Ajouter vehicule (1)");
                 Console.WriteLine("\t Supprimer vehicule (2)");
-                Console.WriteLine("\t Visualiser tous les vehicules (3)");
-                Console.WriteLine("\t\t - Rechercher vehicules par marque (31)");
-                Console.WriteLine("\t\t - Afficher nombre de kilomètre parcouru par véhicule (32)");
-                Console.WriteLine("\t\t - Afficher vehicule trié par leurs nombres de km parcouru (33)");
-                Console.WriteLine("\t\t - Afficher vehicule trié par leurs conso au 100 km (34)");
-                Console.WriteLine("\t\t - Afficher vehicule par marque (35)");
+                Console.WriteLine("\t retour d'un vehicule de location (3)");
+                Console.WriteLine("\t Visualiser tous les vehicules (4)");
+                Console.WriteLine("\t\t - Rechercher vehicules par marque (41)");
+                Console.WriteLine("\t\t - Afficher nombre de kilomètre parcouru par véhicule (42)");
+                Console.WriteLine("\t\t - Afficher vehicule trié par leurs nombres de km parcouru (43)");
+                Console.WriteLine("\t\t - Afficher vehicule trié par leurs conso au 100 km (44)");
+                Console.WriteLine("\t\t - Afficher vehicule par marque (45)");
                 Console.WriteLine("\t Retourner au menu principal (e)\n");
                 Console.Write("Votre choix: ");
 
@@ -291,23 +308,27 @@ namespace projet_POO
                         break;
 
                     case "3":
+                        this.retourner_vehicule();
+                        break;
+
+                    case "4":
                         this.affichage_list("Visualiser tous les vehicules", a.List_vehicule);
                         Console.ReadLine();
                         break;
 
-                    case "31":
+                    case "41":
                         Console.Write("\nmarque recherchée: ");
                         String marque = Console.ReadLine();
                         this.affichage_list("Liste de vehicule de la marque " + marque + ":", a.List_vehicule.FindAll(v => v.marque.ToLower() == marque.ToLower()));
                         Console.ReadLine();
                         break;
 
-                    case "32":
+                    case "42":
                         a.List_vehicule.ForEach(v => Console.WriteLine("Immatriculation: " + v.immatriculation + " - marque: " + v.marque + " => " + v.nbr_km_parcouru + " Km parcourus"));
                         Console.ReadLine();
                         break;
 
-                    case "33":
+                    case "43":
                         a.List_vehicule.Sort(delegate (Vehicule a, Vehicule b)
                         {
                             return -1 * a.nbr_km_parcouru.CompareTo(b.nbr_km_parcouru);
@@ -316,7 +337,7 @@ namespace projet_POO
                         Console.ReadLine();
                         break;
 
-                    case "34":
+                    case "44":
                         a.List_vehicule.Sort(delegate (Vehicule a, Vehicule b)
                         {
                             return -1 * a.conso_km.CompareTo(b.conso_km);
@@ -325,7 +346,7 @@ namespace projet_POO
                         Console.ReadLine();
                         break;
 
-                    case "35":
+                    case "45":
                         a.List_vehicule.Sort(delegate (Vehicule a, Vehicule b)
                         {
                             return a.marque.CompareTo(b.marque);
@@ -438,7 +459,7 @@ namespace projet_POO
             String mdp = Console.ReadLine();
 
             a.ajouter_client(nom, prenom, email, identifiant, mdp);
-            this.utilisateur = a.checkClient(identifiant, mdp);
+            this.utilisateur = a.checkUtilisateur(identifiant, mdp, 1);
             Console.WriteLine("Client créé avec succés!");
             System.Threading.Thread.Sleep(1000);
         }
@@ -559,6 +580,13 @@ namespace projet_POO
             Console.Write("\nChoisissez votre type de vehicule: voiture(1), moto (2), camion(3): ");
             string type = Console.ReadLine();
 
+            if(a.List_vehicule.Find(v => v.typeV == Vehicule.getTVehicule(type) && v.dispo == Vehicule.Dispo.disponible) == null)
+            {
+                Console.WriteLine("Ce type de véhicule n'est pas disponible actuellement");
+                System.Threading.Thread.Sleep(2000);
+                return;
+            }
+
             Console.Write("Indiquer la ville de départ du trajet: ");
             string ville_dep = Console.ReadLine();
 
@@ -570,6 +598,47 @@ namespace projet_POO
 
             a.ajouter_trajet(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, ville_dep, ville_arr, km_trajet);
             Console.WriteLine("trajet créé avec succés!");
+            System.Threading.Thread.Sleep(1000);
+        }
+
+        public void verification_vehicule()
+        {
+            List<Vehicule> VehiculeNonVerifié = a.getListVehiculeControleur(this.utilisateur.Identifiant).FindAll(x => x.dispo == Vehicule.Dispo.nonVérifié);
+            Console.Clear();
+            if(VehiculeNonVerifié.Count == 0)
+            {
+                Console.WriteLine("Vous n'avez aucun véhicule à vérifier");
+                System.Threading.Thread.Sleep(2000);
+                return ;
+            }
+            this.affichage_list("Mes véhicules a vérifier", VehiculeNonVerifié);
+            Console.WriteLine("Indiquer l'immatriculation du vehicule à verifier: ");
+            string immat = Console.ReadLine();
+
+            Vehicule v = VehiculeNonVerifié.Find(x => x.immatriculation == immat);
+            if(v == null)
+            {
+                Console.WriteLine("Ce véhicule ne vous est pas affecté ou n'existe pas!");
+                System.Threading.Thread.Sleep(1000);
+                return;
+            }
+            Console.WriteLine("Intervention précédente: " + (v.intervention == "" ? "aucune intervention" : v.intervention));
+            
+            Console.Write("Reportez toutes les interventions faites sur ce véhicule: ");
+            string intervention = Console.ReadLine();
+
+            Console.Write("Remettre ce véhicule disponible pour la location? oui(1) non(2): ");
+            int dispo = int.Parse(Console.ReadLine());
+
+            string motif = null;
+            if(dispo != 1)
+            {
+                Console.WriteLine("Motif de l'indisponibilité: ");
+                motif = Console.ReadLine();
+            }
+
+            a.verification_vehicule(v, intervention, dispo, motif);
+            Console.Write("véhicule vérifié avec succés ");
             System.Threading.Thread.Sleep(1000);
         }
 
@@ -630,6 +699,43 @@ namespace projet_POO
                     System.Threading.Thread.Sleep(1000);
                 }
             }
+        }
+
+        public void retourner_vehicule()
+        {
+            Console.Clear();
+            if (a.List_vehicule.FindAll(x => x.dispo == Vehicule.Dispo.loué) == null) {
+                Console.WriteLine("Aucun véhicule ne peut être retourné car aucun véhicule n'est loué");
+                System.Threading.Thread.Sleep(2000);
+                return;
+            }
+            this.affichage_list("Véhicules loués :", a.List_vehicule.FindAll(x => x.dispo == Vehicule.Dispo.loué));
+            Console.Write("Indiquer l'immatriculation du vehicule qui à été retourner: ");
+            string immat = Console.ReadLine();
+
+            Vehicule v = a.List_vehicule.Find(x => x.immatriculation == immat);
+            if (v == null)
+            {
+                Console.WriteLine("Ce véhicule ne vous est pas affecté ou n'existe pas!");
+                System.Threading.Thread.Sleep(1000);
+                return;
+            }
+
+            Console.Write("\nIndiquer le numéro du parking ou le vehicule a été retourné (de 1 à 23): ");
+            int cParking = int.Parse(Console.ReadLine());
+
+            Console.Write("\nIndiquer le numéro de la place de parking (de 0 à 9): ");
+            int cPlace = int.Parse(Console.ReadLine());
+
+            if(!a.retour_vehicule(v, cParking, cPlace))
+            {
+                Console.WriteLine("Le véhicule n'a pas pu être retourné, la place référencé est déja prise ou le parking est plein");
+                System.Threading.Thread.Sleep(3000);
+                return;
+            }
+
+            Console.WriteLine("Vehicule retourné avec succés");
+            System.Threading.Thread.Sleep(1000);
         }
         public void supprimer_trajet()
         {

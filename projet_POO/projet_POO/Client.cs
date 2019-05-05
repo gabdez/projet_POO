@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace projet_POO
 {
-    class Client : Utilisateur
+    public class Client : Utilisateur
     {
         public string nom;
         public string prenom;
@@ -48,12 +48,5 @@ namespace projet_POO
                 this.montant_location = value;
             }
         }
-        //public string Mdp
-        //{
-        //    get
-        //    {
-        //        return this.mdp;
-        //    }
-        //}
     }
 }

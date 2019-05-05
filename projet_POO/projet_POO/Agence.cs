@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace projet_POO
 {
@@ -56,7 +57,7 @@ namespace projet_POO
         }
         private void affecterVehiculeParking(Vehicule v, int cParking)
         {
-            this.list_parkings[cParking - 1].addVehicule(v);
+            this.list_parkings[cParking - 1].addVehicule(-1, v);
         }
 
         public void ajouter_trajet(Vehicule.TVehicule tVehicule, string identifiant, string ville_dep, string ville_arr, int km_trajet)
@@ -66,9 +67,17 @@ namespace projet_POO
             Trajet t = new Trajet(veh, c, ville_dep, ville_arr, km_trajet, Vehicule.getPrixCarburant(veh.Carb));
             this.list_trajet.Add(t);
             veh.dispo = Vehicule.Dispo.loué;
+            this.enlever_vehicule_parking(veh);
             veh.nbr_km_parcouru += km_trajet;
             c.nbr_km_parcouru += km_trajet;
             c.Montant_location += t.cout_total();
+        }
+
+        public void enlever_vehicule_parking(Vehicule v)
+        {
+            foreach(Parking p in this.list_parkings){
+                if (p.removeVehicule(v)) break;
+            }
         }
 
         public void supprimer_client(Client c)
@@ -85,14 +94,70 @@ namespace projet_POO
             this.list_trajet.Remove(t);
         }
 
-        public Utilisateur checkClient(string ident, string clear_mdp)
+        public Utilisateur checkUtilisateur(string ident, string clear_mdp, int typeUtilisateur)
         {
-            return this.list_client.Find(c => c.checkConnexion(ident, clear_mdp));
+            if (typeUtilisateur == 1) return this.list_client.Find(c => c.checkConnexion(ident, clear_mdp));
+            else if (typeUtilisateur == 2) return this.admin.checkConnexion(ident, clear_mdp) ? this.admin : null;
+            else {
+                for(int i = 0; i < this.array_controleurs.Length; i++)
+                {
+                    if (this.array_controleurs[i].checkConnexion(ident, clear_mdp)) return this.array_controleurs[i];
+                }
+            }
+            return null;
         }
-        public Utilisateur checkAdmin(string ident, string clear_mdp)
+        
+        public void verification_vehicule(Vehicule v, string intervention, int dispo, string motif)
         {
-            return this.admin.checkConnexion(ident, clear_mdp) ? this.admin : null; ;
+            if(v != null)
+            {
+                v.intervention += intervention;
+                if (dispo != 1)
+                {
+                    v.dispo = Vehicule.Dispo.indisponible;
+                    v.motifIndisponibilité = motif;
+                }
+                else v.dispo = Vehicule.Dispo.disponible;
+            }
         }
+
+        public bool retour_vehicule(Vehicule v,int cParking,int cPlace)
+        {
+            if (this.list_parkings.Find(p => p.CodeP == cParking).Places[cPlace] == null)
+            {
+                this.list_parkings.Find(p => p.CodeP == cParking).addVehicule(cPlace, v);
+                v.dispo = Vehicule.Dispo.nonVérifié;
+                return true;
+            }
+            else return false;
+        }
+
+        //public void serialize()
+        //{
+        //    try
+        //    {
+
+        //        Stream fStream = new FileStream("parkingsCollection.xml", FileMode.Create, FileAccess.Write, FileShare.None);
+
+        //        XmlSerializer xmlForamt = new XmlSerializer(typeof(List<Parking>));
+        //        xmlForamt.Serialize(fStream, this.list_parkings);
+        //        fStream.Close();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine("Error " + e.Message);
+        //        Console.ReadLine();
+        //    }
+        //}
+
+        //public void deserialize()
+        //{
+        //    FileStream fs = new FileStream("parkingsCollection.xml", FileMode.Open);
+        //    XmlSerializer serializer = new XmlSerializer(typeof(List<Parking>));
+        //    List<Parking> dataParkings = null;
+        //    dataParkings = (List<Parking>)serializer.Deserialize(fs);
+        //    serializer.Serialize(Console.Out, dataParkings);
+        //}
 
         public void addData()
         {
@@ -126,8 +191,13 @@ namespace projet_POO
             this.ajouter_trajet(Vehicule.TVehicule.moto, "7", "Lyon", "HR", 700);
             this.ajouter_trajet(Vehicule.TVehicule.moto, "1", "bordeau", "Nice", 300);
         }
-        
-        
+
+        public List<Vehicule> getListVehiculeControleur(string identifiant)
+        {
+            return this.array_controleurs[Array.FindIndex(this.array_controleurs, c => c.Identifiant == identifiant)].List_VMaintenance;
+        }
+
+
 
         public List<Vehicule> List_vehicule
         {
@@ -155,6 +225,13 @@ namespace projet_POO
             get
             {
                 return this.list_parkings;
+            }
+        }
+        public Controleur[] Array_controleurs
+        {
+            get
+            {
+                return this.array_controleurs;
             }
         }
         public static Agence Instance

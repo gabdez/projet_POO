@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace projet_POO
 {
-    abstract class Utilisateur
+    public abstract class Utilisateur
     {
         protected string identifiant;
         protected string mdp;

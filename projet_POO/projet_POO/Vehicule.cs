@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace projet_POO
 {
-    abstract class Vehicule
+    [Serializable]
+    public abstract class Vehicule
     {
-        public enum Dispo { disponible, loué, nonVérifié };
+        public enum Dispo { disponible, indisponible, loué, nonVérifié };
         public enum Tcarburant { gazole, sansPlomb95, sansPlomb98 };
         public enum TVehicule { voiture, moto, camion };
 
@@ -21,18 +22,21 @@ namespace projet_POO
         public int nbr_km_parcouru;
         public Dispo dispo = Dispo.disponible;
         public Tcarburant Carb;
+        public string intervention = "";
+        public string motifIndisponibilité = "";
 
         public override string ToString()
         {
             return "Immatriculation: " + this.immatriculation + " ; Type vehicule: " + this.typeV + 
                 " ; marque: " + this.marque + 
-                " ; Consommation au 100 km: " + this.conso_km + " ; nombre de Km parcourus: " + this.nbr_km_parcouru;
+                " ; Consommation au 100 km: " + this.conso_km + " ; nombre de Km parcourus: " + this.nbr_km_parcouru + " ; " + this.motif();
         }
 
         public string motif()
         {
             if (this.dispo == Dispo.disponible) return "Véhicule disponible à la location";
             else if (this.dispo == Dispo.loué) return "Véhicule déjà loué";
+            else if (this.dispo == Dispo.indisponible) return "Indisponible - motif :" + this.motifIndisponibilité;
             else return "Véhicule pas encore vérifié par nos équipes";
         }
 

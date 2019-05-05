@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace projet_POO
 {
-    class Trajet
+    public class Trajet
     {
         public static int counter = 0;
         private int codeT;
@@ -56,6 +56,13 @@ namespace projet_POO
             get
             {
                 return this.arrivé;
+            }
+        }
+        public Client clientTrajet
+        {
+            get
+            {
+                return this.c;
             }
         }
     }

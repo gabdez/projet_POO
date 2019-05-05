@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace projet_POO
 {
-    class Admin : Utilisateur
+    public class Admin : Utilisateur
     {
         public Admin()
         {

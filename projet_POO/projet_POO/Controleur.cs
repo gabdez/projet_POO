@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace projet_POO
 {
-    class Controleur : Utilisateur
+    public class Controleur : Utilisateur
     {
         private List<Vehicule> list_VMaintenance = new List<Vehicule>();
 
