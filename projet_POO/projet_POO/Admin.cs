@@ -8,11 +8,7 @@ namespace projet_POO
 {
     public class Admin : Utilisateur
     {
-        public Admin()
-        {
-            this.identifiant = "admin";
-            this.mdp = "admin";
-        }
+        public Admin():base("admin", "admin", "accoutf14@gmail.com","admin", "admin"){}
         public override string getType()
         {
             return "admin";

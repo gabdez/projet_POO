@@ -8,6 +8,7 @@ namespace projet_POO
 {
     class Moto : Vehicule
     {
+        public Moto() { }
         public Moto(String immat, string marque, int prix_achat, float conso_km, Tcarburant carb)
         {
             this.immatriculation = immat;
@@ -15,9 +16,19 @@ namespace projet_POO
             this.prix_achat = prix_achat;
             this.conso_km = conso_km;
             this.nbr_roues = 2;
-            this.typeV = Vehicule.TVehicule.moto;
+            this.typeV = TVehicule.moto;
             this.nbr_km_parcouru = 0;
             this.Carb = carb;
+        }
+
+        public override string getData()
+        {
+            return base.getData();
+        }
+
+        public override void loadData(string s)
+        {
+            base.loadData(s);
         }
     }
 }

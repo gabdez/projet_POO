@@ -1,27 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace projet_POO
 {
-    [Serializable]
-    public class Parking : IXmlSerializable
+    public class Parking : IDataRW
     {
-        public static int counter = 0;
         private Vehicule[] places = new Vehicule[10];
         public string emplacement;
         private int codeP;
         private int nbrVehicule = 0; // nombre de vehicule sur le parking
 
         public Parking() { }
-        public Parking(string emplacement)
+        public Parking(int codeP, string emplacement)
         {
-            this.codeP = ++Parking.counter;
+            this.codeP = codeP;
             this.emplacement = emplacement;
         }
         public void addVehicule(int cPlace, Vehicule v)
@@ -32,13 +23,16 @@ namespace projet_POO
                 this.places[cPlace] = v;
             this.nbrVehicule++;
         }
-        public bool removeVehicule(Vehicule v)
+        /**
+         * @ return is old place in parking
+         */ 
+        public int removeVehicule(Vehicule v)
         {
             for (int i = 0; i < this.places.Length; i++)
             {
-                if (this.places[i] == v) { this.places[i] = null; this.nbrVehicule -= 1; return true; };
+                if (this.places[i] == v) { this.places[i] = null; this.nbrVehicule -= 1; return i; };
             }
-            return false;
+            return -1;
         }
         public bool estComplet()
         {
@@ -67,22 +61,27 @@ namespace projet_POO
             return "Code parking: " + this.codeP + " ; Emplacement: " + this.emplacement + " ; nombre de place libre: " + (9 -this.nbrVehicule);
         }
 
-        public void WriteXml(XmlWriter writer)
+        public string getData()
         {
-            //writer.WriteStartElement("Parking");
-            writer.WriteElementString("codeP" , codeP.ToString());
-            writer.WriteElementString("emplacement" ,emplacement);
-            //writer.WriteEndElement();
+            string sep = "--;--";
+            string codeP = this.codeP + sep;
+            string emplacement = this.emplacement + sep;
+            string nbrVehicule = this.nbrVehicule + sep;
+            //string  = this.places + sep;
+            string str = "";
+            foreach (Vehicule v in this.places)
+            {
+                str = str + ( v!=null ? v.Immat : "") + ",!";
+            }
+            return codeP + emplacement + nbrVehicule + str + sep;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader)
+        public void loadData(string s)
         {
-            
-        }
-
-        public XmlSchema GetSchema()
-        {
-            return (null);
+            string[] tokens = s.Split(new string[] { "--;--" }, StringSplitOptions.None);
+            this.codeP = int.Parse(tokens[0]);
+            this.emplacement = tokens[1];
+            this.nbrVehicule = int.Parse(tokens[2]);
         }
     }
 }

@@ -11,7 +11,10 @@ namespace projet_POO
         static void Main(string[] args)
         {
             Menu m = new Menu(Agence.Instance);
+            DataLoader dl = new DataLoader(Agence.Instance);
+            dl.loadData();
             m.start();
+            dl.saveData();
         }
     }
 }

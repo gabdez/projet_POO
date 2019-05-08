@@ -9,32 +9,22 @@ namespace projet_POO
     {
         public static int counter = 0;
         private int codeT;
-        private Vehicule v;
-        private Client c;
         private string depart;
-        private string arrivé;
-        private float nbr_km;
-        private double prix_carburant;
+        private string retour;
+        private double nbr_km;
 
-        public Trajet(Vehicule v, Client c,string depart, string arrivé, float nbr_km, double prixCarburantKm)
+        public Trajet(string depart, string retour, float nbr_km)
         {
             this.codeT = ++counter;
-            this.v = v;
-            this.c = c;
             this.depart = depart;
-            this.arrivé = arrivé;
+            this.retour = retour;
             this.nbr_km = nbr_km;
-            this.prix_carburant = prixCarburantKm;
         }
 
-        //nombre de kilomètres x consommation moyenne du véhicule L/100km x prix d'un litre de carburant en euro
-        public double cout_total()
-        {
-            return this.nbr_km * v.conso_km * this.prix_carburant;
-        }
+        
         public override string ToString()
         {
-            return "Code trajet: " + this.codeT + " ; Depart: " + this.depart + " ; Arrivée: " + this.arrivé + " ; Cout total: " + this.cout_total() + " euros";
+            return "Code trajet: " + this.codeT + " ; Depart: " + this.depart + " ; Arrivée: " + this.retour;
         }
 
         public int CodeT
@@ -51,18 +41,19 @@ namespace projet_POO
                 return this.depart;
             }
         }
-        public string Arrivee
+        public string Retour
         {
             get
             {
-                return this.arrivé;
+                return this.retour;
             }
         }
-        public Client clientTrajet
+
+        public double Nbr_km
         {
             get
             {
-                return this.c;
+                return this.nbr_km;
             }
         }
     }

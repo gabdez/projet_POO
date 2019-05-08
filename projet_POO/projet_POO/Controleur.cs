@@ -10,11 +10,8 @@ namespace projet_POO
     {
         private List<Vehicule> list_VMaintenance = new List<Vehicule>();
 
-        public Controleur(string ident, string mdp)
-        {
-            this.identifiant = ident;
-            this.mdp = mdp;
-        }
+        public Controleur() { }
+        public Controleur(string ident, string mdp):base(mdp, ident, "accoutf14@gmail.com", "controleur", "controleur"){}
 
         public override string getType()
         {
@@ -27,6 +24,31 @@ namespace projet_POO
             {
                 return this.list_VMaintenance;
             }
+        }
+
+        /// <summary>
+        /// Renvoie un boolean si le controleur possède bien la voiture v en paramètre
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public bool EstMaintenu(Vehicule v)
+        {
+            return this.list_VMaintenance.Find(veh => veh.Immat == v.Immat) == null ? false : true ;
+        }
+
+        public override string getData()
+        {
+            string sep = "--;--";
+            string str = "";
+            list_VMaintenance.ForEach(v => {
+                str = str + v.Immat + ",!";
+            });
+            return base.getData() + str + sep;
+        }
+
+        public override void loadData(string s)
+        {
+            base.loadData(s);
         }
     }
 }

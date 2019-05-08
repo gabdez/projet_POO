@@ -96,7 +96,7 @@ namespace projet_POO
                 Console.WriteLine("MENU PRINCIPAL\n");
                 Console.WriteLine("\t Gérer les vehicules (1)");
                 Console.WriteLine("\t Gérer les clients (2)");
-                Console.WriteLine("\t Gérer les trajets (3)");
+                Console.WriteLine("\t Gérer les commandes (3)");
                 Console.WriteLine("\t Déconnexion (e)\n");
                 Console.Write("Votre choix: ");
 
@@ -113,7 +113,7 @@ namespace projet_POO
                         break;
 
                     case "3":
-                        this.gerer_trajet();
+                        this.gerer_commande();
                         break;
 
                     case "e":
@@ -132,7 +132,7 @@ namespace projet_POO
                 Console.Clear();
                 Console.WriteLine("MENU PRINCIPAL\n");
                 Console.WriteLine("\t Louer un vehicule (1)");
-                Console.WriteLine("\t Mes trajets (2)");
+                Console.WriteLine("\t Mes Commandes (2)");
                 Console.WriteLine("\t Voir vehicule disponible (3)");
                 Console.WriteLine("\t Deconnexion (e)\n");
                 Console.Write("Votre choix: ");
@@ -146,12 +146,12 @@ namespace projet_POO
                         break;
 
                     case "2":
-                        this.affichage_list("Mes trajets", a.List_trajet.FindAll(t => t.clientTrajet.Identifiant == this.utilisateur.Identifiant));
+                        this.affichage_list("Mes Commandes", a.List_commande.FindAll(c => c.Client.Identifiant == this.utilisateur.Identifiant));
                         Console.ReadLine();
                         break;
 
                     case "3":
-                        this.affichage_list("Visualiser tous les vehicules dispo", a.List_vehicule.FindAll(v => v.dispo == Vehicule.Dispo.disponible));
+                        this.affichage_list("Visualiser tous les vehicules dispo", a.List_vehicule.FindAll(v => v.Dispo == Dispo.disponible));
                         Console.ReadLine();
                         break;
                         
@@ -229,7 +229,7 @@ namespace projet_POO
                         break;
 
                     case "21":
-                        a.List_client.ForEach(c => Console.WriteLine("Client: " + c.nom + " " + c.prenom + " => " + c.nbr_km_parcouru + " Km parcourus"));
+                        a.List_client.ForEach(c => Console.WriteLine("Client: " + c.Nom + " " + c.Prenom + " => " + c.nbr_km_parcouru + " Km parcourus"));
                         Console.ReadLine();
                         break;
 
@@ -245,25 +245,25 @@ namespace projet_POO
                     case "23":
                         a.List_client.Sort(delegate (Client a, Client b)
                         {
-                            return a.nom.CompareTo(b.nom);
+                            return a.Nom.CompareTo(b.Nom);
                         });
-                        this.affichage_list("Listes des clients selon leurs noms (ASC)", a.List_client);
+                        this.affichage_list("Listes des clients selon leurs Noms (ASC)", a.List_client);
                         Console.ReadLine();
                         break;
 
                     case "24":
                         a.List_client.Sort(delegate (Client a, Client b)
                         {
-                            return -1 * a.nom.CompareTo(b.nom);
+                            return -1 * a.Nom.CompareTo(b.Nom);
                         });
-                        this.affichage_list("Listes des clients selon leurs noms (DESC)", a.List_client);
+                        this.affichage_list("Listes des clients selon leurs Noms (DESC)", a.List_client);
                         Console.ReadLine();
                         break;
 
                     case "25":
                         Console.Write("\nNom ou prenom client recherché: ");
                         String nom = Console.ReadLine();
-                        this.affichage_list("Liste de client trouvé :", a.List_client.FindAll(v => v.nom.ToLower() == nom.ToLower() || v.prenom.ToLower() == nom.ToLower()));
+                        this.affichage_list("Liste de client trouvé :", a.List_client.FindAll(v => v.Nom.ToLower() == nom.ToLower() || v.Prenom.ToLower() == nom.ToLower()));
                         Console.ReadLine();
                         break;
 
@@ -292,6 +292,7 @@ namespace projet_POO
                 Console.WriteLine("\t\t - Afficher vehicule trié par leurs nombres de km parcouru (43)");
                 Console.WriteLine("\t\t - Afficher vehicule trié par leurs conso au 100 km (44)");
                 Console.WriteLine("\t\t - Afficher vehicule par marque (45)");
+                Console.WriteLine("\t Visualiser tous les parkings (5)");
                 Console.WriteLine("\t Retourner au menu principal (e)\n");
                 Console.Write("Votre choix: ");
 
@@ -319,19 +320,19 @@ namespace projet_POO
                     case "41":
                         Console.Write("\nmarque recherchée: ");
                         String marque = Console.ReadLine();
-                        this.affichage_list("Liste de vehicule de la marque " + marque + ":", a.List_vehicule.FindAll(v => v.marque.ToLower() == marque.ToLower()));
+                        this.affichage_list("Liste de vehicule de la marque " + marque + ":", a.List_vehicule.FindAll(v => v.Marque.ToLower() == marque.ToLower()));
                         Console.ReadLine();
                         break;
 
                     case "42":
-                        a.List_vehicule.ForEach(v => Console.WriteLine("Immatriculation: " + v.immatriculation + " - marque: " + v.marque + " => " + v.nbr_km_parcouru + " Km parcourus"));
+                        a.List_vehicule.ForEach(v => Console.WriteLine("Immatriculation: " + v.Immat + " - marque: " + v.Marque + " => " + v.Nbr_km_parcouru + " Km parcourus"));
                         Console.ReadLine();
                         break;
 
                     case "43":
                         a.List_vehicule.Sort(delegate (Vehicule a, Vehicule b)
                         {
-                            return -1 * a.nbr_km_parcouru.CompareTo(b.nbr_km_parcouru);
+                            return -1 * a.Nbr_km_parcouru.CompareTo(b.Nbr_km_parcouru);
                         });
                         this.affichage_list("Voiture classé par nombre de km parcourus: ", a.List_vehicule);
                         Console.ReadLine();
@@ -340,7 +341,7 @@ namespace projet_POO
                     case "44":
                         a.List_vehicule.Sort(delegate (Vehicule a, Vehicule b)
                         {
-                            return -1 * a.conso_km.CompareTo(b.conso_km);
+                            return -1 * a.Conso_km.CompareTo(b.Conso_km);
                         });
                         this.affichage_list("Voiture classé par consommation au 100 km: ", a.List_vehicule);
                         Console.ReadLine();
@@ -349,9 +350,14 @@ namespace projet_POO
                     case "45":
                         a.List_vehicule.Sort(delegate (Vehicule a, Vehicule b)
                         {
-                            return a.marque.CompareTo(b.marque);
+                            return a.Marque.CompareTo(b.Marque);
                         });
                         this.affichage_list("Voiture classé par marque: ", a.List_vehicule);
+                        Console.ReadLine();
+                        break;
+
+                    case "5":
+                        this.affichage_list("Liste des parkings: ", a.List_parkings);
                         Console.ReadLine();
                         break;
 
@@ -362,21 +368,20 @@ namespace projet_POO
             }
         }
 
-        public void gerer_trajet()
+        public void gerer_commande()
         {
             bool play = true;
 
             while (play)
             {
                 Console.Clear();
-                Console.WriteLine("MENU PRINCIPAL > MENU TRAJET \n");
-                //Console.WriteLine("\t Ajouter trajet (1)");
-                Console.WriteLine("\t Supprimer trajet (2)");
-                Console.WriteLine("\t Visualiser tous les trajets (3)");
-                Console.WriteLine("\t\t - Affiché tous les trajets triés selon leur ville depart (31)");
-                Console.WriteLine("\t\t - Affiché tous les trajets triés selon leur ville arrive (32)");
-                Console.WriteLine("\t\t - Rechercher une ville de départ (33)");
-                Console.WriteLine("\t\t - Rechercher une ville d'arrivée (34)");
+                Console.WriteLine("MENU PRINCIPAL > MENU COMMANDE \n");
+                Console.WriteLine("\t Supprimer Commande (1)");
+                Console.WriteLine("\t Visualiser toutes les commandes (2)");
+                Console.WriteLine("\t\t - Affiché toutes les commandes triés selon leur ville depart (21)");
+                Console.WriteLine("\t\t - Affiché toutes les commandes triés selon leur ville retour (22)");
+                Console.WriteLine("\t\t - Rechercher un parking de départ (23)");
+                Console.WriteLine("\t\t - Rechercher un parking retour (24)");
                 Console.WriteLine("\t Retourner au menu principal (e)\n");
                 Console.Write("Votre choix: ");
 
@@ -384,48 +389,44 @@ namespace projet_POO
 
                 switch (menu)
                 {
-                    //case "1":
-                    //    this.ajouter_trajet();
-                    //    break;
+                    case "1":
+                        this.supprimer_commande();
+                        break;
 
                     case "2":
-                        this.supprimer_trajet();
-                        break;
-
-                    case "3":
-                        this.affichage_list("Visualiser tous les trajets", a.List_trajet);
+                        this.affichage_list("Visualiser toutes les commandes", a.List_commande);
                         Console.ReadLine();
                         break;
 
-                    case "31":
-                        a.List_trajet.Sort(delegate (Trajet a, Trajet b)
+                    case "21":
+                        a.List_commande.Sort(delegate (Commande a, Commande b)
                         {
-                            return a.Depart.CompareTo(b.Depart);
+                            return a.Trajet.Depart.CompareTo(b.Trajet.Depart);
                         });
-                        this.affichage_list("Affiché tous les trajets triés selon leur ville depart", a.List_trajet);
+                        this.affichage_list("Affiché toutes commandes triés selon leur parking retour", a.List_commande);
                         Console.ReadLine();
                         break;
 
-                    case "32":
-                        a.List_trajet.Sort(delegate (Trajet a, Trajet b)
+                    case "22":
+                        a.List_commande.Sort(delegate (Commande a, Commande b)
                         {
-                            return a.Arrivee.CompareTo(b.Arrivee);
+                            return a.Trajet.Retour.CompareTo(b.Trajet.Retour);
                         });
-                        this.affichage_list("Affiché tous les trajets triés selon leur ville d'arrivé", a.List_trajet);
+                        this.affichage_list("Affiché tous les trajets triés selon leur parking retour", a.List_commande);
                         Console.ReadLine();
                         break;
 
-                    case "33":
-                        Console.Write("\nVille de départ recherchée: ");
+                    case "23":
+                        Console.Write("\nParking de départ recherchée: ");
                         String ville_dep = Console.ReadLine();
-                        this.affichage_list("", a.List_trajet.FindAll(t => t.Depart.ToLower() == ville_dep.ToLower()));
+                        this.affichage_list("", a.List_commande.FindAll(c => c.Trajet.Depart.ToLower() == ville_dep.ToLower()));
                         Console.ReadLine();
                         break;
 
-                    case "34":
-                        Console.Write("\nVille d'arrivée recherchée: ");
+                    case "24":
+                        Console.Write("\nParking retour recherchée: ");
                         String ville_arr = Console.ReadLine();
-                        this.affichage_list("", a.List_trajet.FindAll(t => t.Arrivee.ToLower() == ville_arr.ToLower()));
+                        this.affichage_list("", a.List_commande.FindAll(t => t.Trajet.Retour.ToLower() == ville_arr.ToLower()));
                         Console.ReadLine();
                         break;
 
@@ -449,7 +450,7 @@ namespace projet_POO
             Console.Write("Prénom client: ");
             String prenom = Console.ReadLine();
 
-            Console.Write("adresse email: ");
+            Console.Write("adresse email (Renseignez une adresse email valide et réelle): ");
             String email = Console.ReadLine();
 
             Console.Write("Identifiant: ");
@@ -460,25 +461,19 @@ namespace projet_POO
 
             a.ajouter_client(nom, prenom, email, identifiant, mdp);
             this.utilisateur = a.checkUtilisateur(identifiant, mdp, 1);
-            Console.WriteLine("Client créé avec succés!");
-            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine("compte créé avec succés! Envoie du mail d'inscription en cours, attendez quelques secondes...");
+            string body = Email.bodyInscription(this.utilisateur);
+
+            if(Email.sendEmail(this.utilisateur.Email, "Bienvenue " + this.utilisateur.Prenom + " !", body))
+                Console.WriteLine("Email envoyé avec succès! (appuyer sur entrée pour revenir au menu principal)");
+            else
+                Console.WriteLine("Le mail n'a pas pu être envoyé. (appuyer sur entrée pour revenir au menu principal)");
+
+            Console.ReadLine();
         }
 
         // fonctions d'ajout
-        public void ajouter_client()
-        {
-            //Console.Clear();
-            //Console.WriteLine("MENU PRINCIPAL > MENU CLIENT > Formulaire d'ajout client \n");
-            //Console.Write("Nom client: ");
-            //String nom = Console.ReadLine();
-
-            //Console.Write("Prénom client: ");
-            //String prenom = Console.ReadLine();
-
-            //a.ajouter_client(nom, prenom);
-            //Console.WriteLine("Client créé avec succés!");
-            //System.Threading.Thread.Sleep(1000);
-        }
+        
         public void ajouter_vehicule()
         {
             Console.Clear();
@@ -506,7 +501,7 @@ namespace projet_POO
             }
             
             this.affichage_list("", a.List_parkings);
-            Console.Write("Renseignez le code du parking du vehicule : ");
+            Console.Write("Renseignez le code du parking où le véhicule sera stationné : ");
             int codeP = int.Parse(Console.ReadLine());
             if (a.List_parkings.Find(p => p.CodeP == codeP).estComplet())
             {
@@ -520,20 +515,20 @@ namespace projet_POO
 
             switch (Vehicule.getTVehicule(typeVehicule))
             {
-                case Vehicule.TVehicule.voiture:
-                    v = new Voiture(immat, marque, prix_achat, conso, Vehicule.Tcarburant.sansPlomb95);
+                case TVehicule.voiture:
+                    v = new Voiture(immat, marque, prix_achat, conso, Tcarburant.sansPlomb95);
                     break;
 
-                case Vehicule.TVehicule.moto:
-                    v = new Moto(immat, marque, prix_achat, conso, Vehicule.Tcarburant.sansPlomb95);
+                case TVehicule.moto:
+                    v = new Moto(immat, marque, prix_achat, conso, Tcarburant.sansPlomb95);
                     break;
 
-                case Vehicule.TVehicule.camion:
-                    v = new Camion(immat, marque, prix_achat, conso, volume, Vehicule.Tcarburant.sansPlomb95);
+                case TVehicule.camion:
+                    v = new Camion(immat, marque, prix_achat, conso, volume, Tcarburant.sansPlomb95);
                     break;
 
                 default:
-                    v = new Voiture(immat, marque, prix_achat, conso, Vehicule.Tcarburant.sansPlomb95);
+                    v = new Voiture(immat, marque, prix_achat, conso, Tcarburant.sansPlomb95);
                     break;
             }
 
@@ -541,35 +536,10 @@ namespace projet_POO
             Console.WriteLine("vehicule créé avec succés!");
             System.Threading.Thread.Sleep(1000);
         }
-        public void ajouter_trajet()
-        {
-            Console.Clear();
-            Console.WriteLine("Formulaire d'ajout trajet");
-            this.affichage_list("", a.List_vehicule);
-
-            Console.Write("\nChoisissez votre type de vehicule: voiture(1), moto (2), camion(3)");
-            string type = Console.ReadLine();
-
-            Console.Write("Indiquer la ville de départ du trajet: ");
-            string ville_dep = Console.ReadLine();
-
-            Console.Write("Indiquer la ville d'arrivée du trajet: ");
-            string ville_arr = Console.ReadLine();
-
-            Console.Write("Indiquer le nombre de km du trajet: ");
-            int km_trajet = int.Parse(Console.ReadLine());
-
-            Console.Write("Indiquer le prix du carburant pour 1L: ");
-            float carburantPrix = float.Parse(Console.ReadLine());
-
-            a.ajouter_trajet(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, ville_dep, ville_arr, km_trajet);
-            Console.WriteLine("trajet créé avec succés!");
-            System.Threading.Thread.Sleep(1000);
-        }
 
         public void louer_vehicule()
         {
-            if (!a.List_vehicule.Exists(v => v.dispo == Vehicule.Dispo.disponible))
+            if (!a.List_vehicule.Exists(v => v.Dispo == Dispo.disponible))
             {
                 Console.WriteLine("Il n'y a pas de véhicule à louer ! Demander aux admninistrateurs d'en rajouter");
                 Console.ReadLine();
@@ -580,30 +550,35 @@ namespace projet_POO
             Console.Write("\nChoisissez votre type de vehicule: voiture(1), moto (2), camion(3): ");
             string type = Console.ReadLine();
 
-            if(a.List_vehicule.Find(v => v.typeV == Vehicule.getTVehicule(type) && v.dispo == Vehicule.Dispo.disponible) == null)
+            if(a.List_vehicule.Find(v => v.TypeV == Vehicule.getTVehicule(type) && v.Dispo == Dispo.disponible) == null)
             {
                 Console.WriteLine("Ce type de véhicule n'est pas disponible actuellement");
                 System.Threading.Thread.Sleep(2000);
                 return;
             }
 
-            Console.Write("Indiquer la ville de départ du trajet: ");
-            string ville_dep = Console.ReadLine();
+            Console.Write("Indiquer le parking de départ du trajet: ");
+            string park_dep = Console.ReadLine();
 
-            Console.Write("Indiquer la ville d'arrivée du trajet: ");
-            string ville_arr = Console.ReadLine();
+            Console.Write("Indiquer le parking retour du trajet: ");
+            string park_arr = Console.ReadLine();
 
             Console.Write("Indiquer le nombre de km du trajet: ");
             int km_trajet = int.Parse(Console.ReadLine());
 
-            a.ajouter_trajet(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, ville_dep, ville_arr, km_trajet);
-            Console.WriteLine("trajet créé avec succés!");
-            System.Threading.Thread.Sleep(1000);
+            int[] emplacement = a.ajouter_commande(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, park_dep, park_arr, km_trajet);
+            Console.WriteLine("trajet créé avec succés! Envoie du mail de location en cours, attendez quelques secondes...");
+            string body = Email.bodyLocation(this.utilisateur, Vehicule.getTVehicule(type), emplacement);
+            if(Email.sendEmail(this.utilisateur.Email, "Nouvelle location !" ,body))
+                Console.WriteLine("Email envoyé avec succès! (appuyer sur entrée pour revenir au menu principal)");
+            else
+                Console.WriteLine("Le mail n'a pas pu être envoyé. (appuyer sur entrée pour revenir au menu principal)");
+            Console.ReadLine();
         }
 
         public void verification_vehicule()
         {
-            List<Vehicule> VehiculeNonVerifié = a.getListVehiculeControleur(this.utilisateur.Identifiant).FindAll(x => x.dispo == Vehicule.Dispo.nonVérifié);
+            List<Vehicule> VehiculeNonVerifié = a.getListVehiculeControleur(this.utilisateur.Identifiant).FindAll(x => x.Dispo == Dispo.nonVérifié);
             Console.Clear();
             if(VehiculeNonVerifié.Count == 0)
             {
@@ -615,14 +590,14 @@ namespace projet_POO
             Console.WriteLine("Indiquer l'immatriculation du vehicule à verifier: ");
             string immat = Console.ReadLine();
 
-            Vehicule v = VehiculeNonVerifié.Find(x => x.immatriculation == immat);
+            Vehicule v = VehiculeNonVerifié.Find(x => x.Immat == immat);
             if(v == null)
             {
                 Console.WriteLine("Ce véhicule ne vous est pas affecté ou n'existe pas!");
                 System.Threading.Thread.Sleep(1000);
                 return;
             }
-            Console.WriteLine("Intervention précédente: " + (v.intervention == "" ? "aucune intervention" : v.intervention));
+            Console.WriteLine("Intervention précédente: " + (v.Intervention == "" ? "aucune intervention" : v.Intervention));
             
             Console.Write("Reportez toutes les interventions faites sur ce véhicule: ");
             string intervention = Console.ReadLine();
@@ -675,9 +650,9 @@ namespace projet_POO
             Console.Clear();
             Console.WriteLine("MENU PRINCIPAL > MENU TRAJET > Formulaire suppression vehicule \n");
 
-            if (a.List_vehicule.Count == 0)
+            if (a.List_vehicule.FindAll(v => v.Dispo == Dispo.disponible).Count == 0)
             {
-                Console.WriteLine("Il n'y a aucun vehicule à supprimer");
+                Console.WriteLine("Il n'y a aucun vehicule à supprimer, tous les véhicules sont soit loué soit en cours de vérification par nos controleurs");
                 Console.Write("\n(tapez sur entrée pour revenir au menu précédent)");
                 Console.ReadLine();
             }
@@ -686,7 +661,7 @@ namespace projet_POO
                 this.affichage_list("", a.List_vehicule);
                 Console.Write("Indiquer l'immatriculation du vehicule à supprimer: ");
                 string immat = Console.ReadLine();
-                Vehicule v = a.List_vehicule.Find(vehicule => vehicule.immatriculation == immat);
+                Vehicule v = a.List_vehicule.Find(vehicule => vehicule.Immat == immat);
                 if (v == null)
                 {
                     Console.WriteLine("L'immatriculation du vehicule que vous avait tapé n'existe pas");
@@ -704,16 +679,16 @@ namespace projet_POO
         public void retourner_vehicule()
         {
             Console.Clear();
-            if (a.List_vehicule.FindAll(x => x.dispo == Vehicule.Dispo.loué) == null) {
+            if (a.List_vehicule.FindAll(x => x.Dispo == Dispo.loué) == null) {
                 Console.WriteLine("Aucun véhicule ne peut être retourné car aucun véhicule n'est loué");
                 System.Threading.Thread.Sleep(2000);
                 return;
             }
-            this.affichage_list("Véhicules loués :", a.List_vehicule.FindAll(x => x.dispo == Vehicule.Dispo.loué));
+            this.affichage_list("Véhicules loués :", a.List_vehicule.FindAll(x => x.Dispo == Dispo.loué));
             Console.Write("Indiquer l'immatriculation du vehicule qui à été retourner: ");
             string immat = Console.ReadLine();
 
-            Vehicule v = a.List_vehicule.Find(x => x.immatriculation == immat);
+            Vehicule v = a.List_vehicule.Find(x => x.Immat == immat);
             if (v == null)
             {
                 Console.WriteLine("Ce véhicule ne vous est pas affecté ou n'existe pas!");
@@ -737,11 +712,11 @@ namespace projet_POO
             Console.WriteLine("Vehicule retourné avec succés");
             System.Threading.Thread.Sleep(1000);
         }
-        public void supprimer_trajet()
+        public void supprimer_commande()
         {
             Console.Clear();
-            Console.WriteLine("MENU PRINCIPAL > MENU TRAJET > Formulaire suppression trajet \n");
-            if (a.List_trajet.Count == 0)
+            Console.WriteLine("MENU PRINCIPAL > MENU COMMANDE > Formulaire suppression commande \n");
+            if (a.List_commande.Count == 0)
             {
                 Console.WriteLine("Il n'y a aucun trajet à supprimer");
                 Console.Write("\n(tapez sur entrée pour revenir au menu précédent)");
@@ -749,16 +724,16 @@ namespace projet_POO
             }
             else
             {
-                this.affichage_list("", a.List_trajet);
+                this.affichage_list("", a.List_commande);
                 Console.Write("Indiquer le code trajet du trajet à supprimer: ");
-                string codeT = Console.ReadLine();
-                Trajet t = a.List_trajet.Find(trajet => trajet.CodeT == int.Parse(codeT));
-                if (t == null)
-                    Console.WriteLine("Le code du trajet que vous avait tapé n'existe pas");
+                string codeC = Console.ReadLine();
+                Commande comm = a.List_commande.Find(c => c.CodeCommande == int.Parse(codeC));
+                if (comm == null)
+                    Console.WriteLine("Le code dde la commande que vous avait tapé n'existe pas");
                 else
                 {
-                    a.supprimer_trajet(t);
-                    Console.WriteLine("Trajet supprimé avec succés");
+                    a.supprimer_commande(comm);
+                    Console.WriteLine("Commande supprimée avec succés");
                     System.Threading.Thread.Sleep(1000);
                 }
             }

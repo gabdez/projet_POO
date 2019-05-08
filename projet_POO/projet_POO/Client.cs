@@ -7,25 +7,17 @@ namespace projet_POO
 {
     public class Client : Utilisateur
     {
-        public string nom;
-        public string prenom;
         public int nbr_km_parcouru;
-        private string email;
         private double montant_location;
 
-        public Client(string nom, string prenom,string email, string identifiant, string clear_mdp)
-        {
-            this.identifiant = identifiant;
-            this.nom = nom;
-            this.prenom = prenom;
-            this.email = email;
-            this.mdp = clear_mdp;
-        }
+        public Client() { }
+
+        public Client(string nom, string prenom,string email, string identifiant, string mdp):base(mdp, identifiant, email, nom, prenom){}
 
         public override string ToString()
         {
-            return "Code client: " + this.identifiant + " ; Nom : " + this.nom + " ; Prenom : " + this.prenom +
-                " ; Nombre de kilomètre parcouru : " + this.nbr_km_parcouru;
+            return "Identifiant: " + this.identifiant + " ; Nom : " + this.nom + " ; Prenom : " + this.prenom +
+                " ; Nombre de kilomètre parcouru : " + this.nbr_km_parcouru + " ; Catégorie client : " + this.categorie();
         }
 
         public int categorie()
@@ -38,7 +30,6 @@ namespace projet_POO
         {
             return "client";
         }
-
         public double Montant_location
         {
             get{
@@ -47,6 +38,21 @@ namespace projet_POO
             set{
                 this.montant_location = value;
             }
+        }
+        public override string getData()
+        {
+            string sep = "--;--";
+            string montant = this.montant_location + sep;
+            string km_parcouru = this.nbr_km_parcouru + sep;
+            return base.getData() + montant + km_parcouru;
+        }
+
+        public override void loadData(string s)
+        {
+            base.loadData(s);
+            string[] tokens = s.Split(new string[] { "--;--" }, StringSplitOptions.None);
+            this.montant_location = double.Parse(tokens[5]);
+            this.nbr_km_parcouru = int.Parse(tokens[6]);
         }
     }
 }
