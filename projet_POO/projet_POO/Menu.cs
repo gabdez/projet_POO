@@ -461,14 +461,10 @@ namespace projet_POO
 
             a.ajouter_client(nom, prenom, email, identifiant, mdp);
             this.utilisateur = a.checkUtilisateur(identifiant, mdp, 1);
-            Console.WriteLine("compte créé avec succés! Envoie du mail d'inscription en cours, attendez quelques secondes...");
+            Console.WriteLine("compte créé avec succés! Un mail d'inscription vous a été envoyé.");
             string body = Email.bodyInscription(this.utilisateur);
-
-            if(Email.sendEmail(this.utilisateur.Email, "Bienvenue " + this.utilisateur.Prenom + " !", body))
-                Console.WriteLine("Email envoyé avec succès! (appuyer sur entrée pour revenir au menu principal)");
-            else
-                Console.WriteLine("Le mail n'a pas pu être envoyé. (appuyer sur entrée pour revenir au menu principal)");
-
+            Email.sendEmail(this.utilisateur.Email, "Bienvenue " + this.utilisateur.Prenom + " !", body);
+            Console.WriteLine("appuyer sur entrée pour revenir au menu principal");
             Console.ReadLine();
         }
 
@@ -567,12 +563,9 @@ namespace projet_POO
             int km_trajet = int.Parse(Console.ReadLine());
 
             int[] emplacement = a.ajouter_commande(Vehicule.getTVehicule(type), this.utilisateur.Identifiant, park_dep, park_arr, km_trajet);
-            Console.WriteLine("trajet créé avec succés! Envoie du mail de location en cours, attendez quelques secondes...");
             string body = Email.bodyLocation(this.utilisateur, Vehicule.getTVehicule(type), emplacement);
-            if(Email.sendEmail(this.utilisateur.Email, "Nouvelle location !" ,body))
-                Console.WriteLine("Email envoyé avec succès! (appuyer sur entrée pour revenir au menu principal)");
-            else
-                Console.WriteLine("Le mail n'a pas pu être envoyé. (appuyer sur entrée pour revenir au menu principal)");
+            Email.sendEmail(this.utilisateur.Email, "Nouvelle location !", body);
+            Console.WriteLine("Votre devis à été envoyé par mail à l'adresse " + this.utilisateur.Email +  ". (appuyer sur entrée pour revenir au menu principal)");
             Console.ReadLine();
         }
 
@@ -725,9 +718,9 @@ namespace projet_POO
             else
             {
                 this.affichage_list("", a.List_commande);
-                Console.Write("Indiquer le code trajet du trajet à supprimer: ");
+                Console.Write("Indiquer le code de la commande du trajet à supprimer: ");
                 string codeC = Console.ReadLine();
-                Commande comm = a.List_commande.Find(c => c.CodeCommande == int.Parse(codeC));
+                Commande comm = a.List_commande.Find(c => c.CodeCommande == codeC);
                 if (comm == null)
                     Console.WriteLine("Le code dde la commande que vous avait tapé n'existe pas");
                 else

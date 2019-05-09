@@ -16,6 +16,7 @@ namespace projet_POO
             loadDataVehicules();
             loadDataControleurs();
             loadDataParkings();
+            loadDataCommandes();
         }
 
         public void saveData()
@@ -24,6 +25,7 @@ namespace projet_POO
             saveDataVehicules();
             saveDataControleurs();
             saveDataParkings();
+            saveDataCommandes();
         }
 
         // vehicules
@@ -124,10 +126,13 @@ namespace projet_POO
                     // on reprend les ids des vehicules dans la liste des vehicules des controleurs
                     string[] arr = tokens[5].Split(new string[] { ",!" }, StringSplitOptions.None);
                     // ajouter les vehicules au bon controleur
-                    Vehicule v = a.List_vehicule.Find(x => x.Immat == arr[0]);
-                    if(v != null)
+                    for (int i = 0; i < arr.Length; i++)
                     {
-                        a.Array_controleurs[index].List_VMaintenance.Add(v);
+                        Vehicule v = a.List_vehicule.Find(x => x.Immat == arr[i]);
+                        if (v != null)
+                        {
+                            a.Array_controleurs[index].List_VMaintenance.Add(v);
+                        }
                     }
                     line = sr.ReadLine();
                     index++;
@@ -160,18 +165,61 @@ namespace projet_POO
                 {
                     Parking p = new Parking();
                     p.loadData(line);
+                    string[] tokens = line.Split(new string[] { "--;--" }, StringSplitOptions.None);
+                    // on reprend les ids des vehicules et on les mets sur les places de parkings
+                    string[] arr = tokens[3].Split(new string[] { ",!" }, StringSplitOptions.None);
+                    // ajouter les vehicules au bon controleur
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        Vehicule v = a.List_vehicule.Find(x => x.Immat == arr[i]);
+                        if (v != null)
+                        {
+                            p.Places[i] = v;
+                        }
+                    }
                     this.a.List_parkings.Add(p);
-                    //string[] tokens = line.Split(new string[] { "--;--" }, StringSplitOptions.None);
-                    //// on reprend les ids des vehicules dans la liste des vehicules des controleurs
-                    //string[] arr = tokens[5].Split(new string[] { "," }, StringSplitOptions.None);
-                    //// ajouter les vehicules au bon controleur
-                    //Vehicule v = a.List_vehicule.Find(x => x.Immat == arr[0]);
-                    //if (v != null)
-                    //{
-                    //    a.Array_controleurs[index].List_VMaintenance.Add(v);
-                    //}
                     line = sr.ReadLine();
                     index++;
+                }
+                sr.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+                Console.ReadLine();
+            }
+        }
+
+
+        // commandes
+        private void saveDataCommandes()
+        {
+            StreamWriter sw = new StreamWriter("commandes.txt");
+            a.List_commande.ForEach(c => sw.WriteLine(c.getData()));
+            sw.Close();
+        }
+        private void loadDataCommandes()
+        {
+            string line;
+            try
+            {
+                StreamReader sr = new StreamReader("commandes.txt");
+                line = sr.ReadLine();
+                while (line != null)
+                {
+                    Commande c = new Commande();
+                    c.loadData(line);
+                    string[] tokens = line.Split(new string[] { "--;--" }, StringSplitOptions.None);
+                    // on reprend les ids du vehicule, du client et du trajet et les mettre dans la commande
+                    Vehicule v = a.List_vehicule.Find(x => x.Immat == tokens[2]);
+                    Client cli = a.List_client.Find(client => client.Identifiant == tokens[1]);
+                    if (v != null && cli != null)
+                    {
+                        c.Client = cli;
+                        c.Vehicule = v;
+                    }
+                    this.a.List_commande.Add(c);
+                    line = sr.ReadLine();
                 }
                 sr.Close();
             }

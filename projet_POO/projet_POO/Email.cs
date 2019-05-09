@@ -6,7 +6,7 @@ namespace projet_POO
 {
     class Email
     {
-        public static bool sendEmail(string email, string title, string body)
+        public static void sendEmail(string email, string title, string body)
         {
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
@@ -15,24 +15,23 @@ namespace projet_POO
             };
             try
             {
-                client.Send("logicielDeLocation@gmail.com", email, title, body);
+                client.SendMailAsync("logicielDeLocation@gmail.com", email, title, body);
             }
             catch (Exception e)
             {
-                return false;
+
             }
-            return true;
         }
         public static string bodyLocation(Utilisateur u, TVehicule tVehicule, int[] places)
         {
-            return "Bonjour " + u.Prenom + ",\n\nVous avez réservé une véhicule de type " + tVehicule +
-                ".\nvous pouvez dès à présent retrouver votre véhicule sur le parking numéro " + places[0]
-                + ". Votre " + tVehicule + " sera situé sur la place numéro: a" + places[1] +
-                "\n\nMerci à vous pour votre confiance envers nos service ! a bientôt !";
+            return "Bonjour " + u.Prenom + ",\n\nVous avez réservé un véhicule de type " + tVehicule +
+                ".\nVous pouvez dès à présent retrouver votre véhicule sur le parking numéro " + places[0]
+                + ". Votre " + tVehicule + " sera situé(e) sur la place numéro: a" + places[1] +
+                "\n\nMerci à vous pour votre confiance envers nos services ! A bientôt !";
         }
         public static string bodyInscription(Utilisateur u)
         {
-            return "Bonjour " + u.Prenom + ",\nBienvenue dans notre logiciel de location de véhicule !\nGrace à ce logiciel vous pouvez" +
+            return "Bonjour " + u.Prenom + ",\nBienvenue dans notre logiciel de location de véhicule !\nGrâce à ce logiciel vous pouvez" +
                 " louer des véhicules(moto, camion et voiture) dans des parkings parisiens pour vous déplacer.\n A bientôt " + u.Prenom;
         }
 

@@ -17,21 +17,21 @@ namespace projet_POO
         private Agence()
         {
             // initialisation controleur et parking
-            //if (this.array_controleurs[0] == null)
-            //this.array_controleurs = new Controleur[3]
-            //    {
+            //if (false)
+            //    this.array_controleurs = new Controleur[3]
+            //        {
             //        new Controleur("c1", "controleur"),
             //        new Controleur("c2", "controleur"),
             //        new Controleur("c3", "controleur"),
-            //    };
-            //if (this.list_parkings.Count == 0)
+            //        };
+            //if (false)
             //{
             //    for (int i = 0; i <= 20; i++)
             //    {
-            //        this.list_parkings.Add(new Parking(i+1, "Arrondissement " + i));
+            //        this.list_parkings.Add(new Parking(i + 1, "Arrondissement " + i));
             //    }
             //    this.list_parkings.Add(new Parking(22, "Roissy"));
-            //    this.list_parkings.Add(new Parking(23,  "Orly"));
+            //    this.list_parkings.Add(new Parking(23, "Orly"));
             //}
         }
 
@@ -117,6 +117,7 @@ namespace projet_POO
         {
             this.list_vehicule.Remove(v);
             this.array_controleurs[Array.FindIndex(this.array_controleurs,c=>c.EstMaintenu(v))].List_VMaintenance.Remove(v);
+            this.enlever_vehicule_parking(v);
         }
         public void supprimer_commande(Commande c)
         {
@@ -176,7 +177,7 @@ namespace projet_POO
             //this.ajouter_commande(TVehicule.camion, "6", "brest", "avranche", 400);
             //this.ajouter_commande(TVehicule.moto, "7", "Lyon", "HR", 700);
         }
-        
+
         // getters and setters
         public List<Vehicule> getListVehiculeControleur(string identifiant)
         {
