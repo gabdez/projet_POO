@@ -32,11 +32,11 @@ namespace projet_POO
         private void saveDataVehicules()
         {
             StreamWriter sw = new StreamWriter("vehicules.txt");
+
             this.a.List_vehicule.ForEach(v => {
                 sw.WriteLine(v.getData());
             });
             sw.Close();
-            Console.ReadLine();
         }
         private void loadDataVehicules()
         {
@@ -167,7 +167,7 @@ namespace projet_POO
                     p.loadData(line);
                     string[] tokens = line.Split(new string[] { "--;--" }, StringSplitOptions.None);
                     // on reprend les ids des vehicules et on les mets sur les places de parkings
-                    string[] arr = tokens[3].Split(new string[] { ",!" }, StringSplitOptions.None);
+                    string[] arr = tokens[2].Split(new string[] { ",!" }, StringSplitOptions.None);
                     // ajouter les vehicules au bon controleur
                     for (int i = 0; i < arr.Length; i++)
                     {
@@ -211,8 +211,8 @@ namespace projet_POO
                     c.loadData(line);
                     string[] tokens = line.Split(new string[] { "--;--" }, StringSplitOptions.None);
                     // on reprend les ids du vehicule, du client et du trajet et les mettre dans la commande
-                    Vehicule v = a.List_vehicule.Find(x => x.Immat == tokens[2]);
-                    Client cli = a.List_client.Find(client => client.Identifiant == tokens[1]);
+                    Vehicule v = a.List_vehicule.Find(x => x.Immat == tokens[3]);
+                    Client cli = a.List_client.Find(client => client.Identifiant == tokens[2]);
                     if (v != null && cli != null)
                     {
                         c.Client = cli;

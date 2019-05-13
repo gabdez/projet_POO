@@ -7,7 +7,7 @@ namespace projet_POO
 {
     public class Client : Utilisateur
     {
-        public int nbr_km_parcouru;
+        public float nbr_km_parcouru;
         private double montant_location;
 
         public Client() { }

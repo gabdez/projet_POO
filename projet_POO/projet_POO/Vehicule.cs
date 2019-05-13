@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace projet_POO
 {
     public enum Dispo { disponible, indisponible, loué, nonVérifié };
-    public enum Tcarburant { gazole, sansPlomb95, sansPlomb98 };
+    public enum Tcarburant { diesel, sansPlomb95, sansPlomb98 };
     public enum TVehicule { voiture, moto, camion };
     public abstract class Vehicule : IDataRW
     {
@@ -24,13 +24,24 @@ namespace projet_POO
         protected string intervention = "";
         protected string motifIndisponibilité = "";
 
+        public Vehicule(string immat, string marque, float prix_achat, float conso_km, Tcarburant carb)
+        {
+            this.immatriculation = immat;
+            this.marque = marque;
+            this.prix_achat = prix_achat;
+            this.conso_km = conso_km;
+            this.nbr_km_parcouru = 0;
+            this.Carb = carb;
+        }
         public Vehicule() { }
 
         public override string ToString()
         {
-            return "Immatriculation: " + this.immatriculation + " ; Type vehicule: " + this.typeV + 
-                " ; marque: " + this.marque + 
-                " ; Consommation au 100 km: " + this.conso_km + " ; nombre de Km parcourus: " + this.nbr_km_parcouru + " ; " + this.motif();
+            return "Immatriculation: " + this.immatriculation 
+                + " ; Type vehicule: " + this.typeV
+                + " ; Type carburant: " + this.Carb
+                + " ; marque: " + this.marque 
+                + " ; Consommation au 100 km: " + this.conso_km + " ; nombre de Km parcourus: " + this.nbr_km_parcouru + " ; " + this.motif();
         }
 
         public string motif()
@@ -45,7 +56,7 @@ namespace projet_POO
         {
             switch (carb)
             {
-                case Tcarburant.gazole:
+                case Tcarburant.diesel:
                     return 1.479;
                 case Tcarburant.sansPlomb95:
                     return 1.599;
@@ -85,7 +96,7 @@ namespace projet_POO
             immatriculation = tokens[0];
             marque = tokens[1];
             prix_achat = float.Parse(tokens[2]);
-            conso_km = int.Parse(tokens[3]);
+            conso_km = float.Parse(tokens[3]);
             typeV = (TVehicule) Enum.Parse(typeof(TVehicule), tokens[4]);
             nbr_km_parcouru = float.Parse(tokens[5]);
             dispo = (Dispo)Enum.Parse(typeof(Dispo), tokens[6]);

@@ -14,26 +14,7 @@ namespace projet_POO
         private Admin admin = new Admin();
         private static Agence instance = null;
 
-        private Agence()
-        {
-            // initialisation controleur et parking
-            //if (false)
-            //    this.array_controleurs = new Controleur[3]
-            //        {
-            //        new Controleur("c1", "controleur"),
-            //        new Controleur("c2", "controleur"),
-            //        new Controleur("c3", "controleur"),
-            //        };
-            //if (false)
-            //{
-            //    for (int i = 0; i <= 20; i++)
-            //    {
-            //        this.list_parkings.Add(new Parking(i + 1, "Arrondissement " + i));
-            //    }
-            //    this.list_parkings.Add(new Parking(22, "Roissy"));
-            //    this.list_parkings.Add(new Parking(23, "Orly"));
-            //}
-        }
+        private Agence(){}
 
         public void ajouter_client(string nom, string prenom, string email, string identifiant, string mdp)
         {
@@ -66,32 +47,23 @@ namespace projet_POO
          * @Return son ancien emplacement oû le loueur doit aller chercher la voiture
          * un tableau int[2] -> int[0] = code parking ; int[1] = place dans le parking (0 à 9)
          */
-        public int[] ajouter_commande(TVehicule tVehicule, string identifiant, string ville_dep, string ville_arr, int km_trajet)
+        public Commande ajouter_commande(Vehicule veh, Client c, Trajet t)
         {
             int[] places = new int[2];
-            Vehicule veh = this.list_vehicule.Find(v => v.Dispo == Dispo.disponible && v.TypeV == tVehicule);
-            Client c = this.list_client.Find(client => client.Identifiant == identifiant);
-            Trajet t = new Trajet(ville_dep, ville_arr, km_trajet);
-            if (veh != null && c != null && t != null)
-            {
-                Commande com = new Commande(c, t, veh);
-                this.list_commande.Add(com);
-                veh.Dispo = Dispo.loué;
-                places = this.enlever_vehicule_parking(veh);
-                veh.Nbr_km_parcouru += km_trajet;
-                c.nbr_km_parcouru += km_trajet;
-                c.Montant_location += com.cout_total();
-            }
-            else
-            {
-                Console.WriteLine("Commande impossible à ajouter, aucun type de voiture demandé n'est disponible");
-            }
-            return places;
+            Commande com = new Commande(c, t, veh);
+            this.list_commande.Add(com);
+            veh.Dispo = Dispo.loué;
+            veh.Nbr_km_parcouru += t.Nbr_km;
+            c.nbr_km_parcouru += t.Nbr_km;
+            c.Montant_location += com.cout_total();
+            return com;
         }
 
-        /**
-         * @ return sont ancien emplacement
-         */ 
+        /// <summary>
+        /// Fonction qui permet de retirer un vehicule v d'un parking et de retourner son ancien emplacement
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns>Son ancien emplacement</returns>
         public int[] enlever_vehicule_parking(Vehicule v)
         {
             int[] places = new int[2];
@@ -158,30 +130,18 @@ namespace projet_POO
             }
             else return false;
         }
-
-        public void addData()
-        {
-
-            //this.ajouter_vehicule(new Voiture("123", "Renault", 200000, 8, Tcarburant.sansPlomb95), 1);
-            //this.ajouter_vehicule(new Moto( "456", "BMW", 200000, 9, Tcarburant.gazole), 2);
-            //this.ajouter_vehicule(new Camion("789", "Audi", 200000, 4,10, Tcarburant.sansPlomb95),3);
-            //this.ajouter_vehicule(new Camion("1273", "Renault", 200000, 8, 0, Tcarburant.sansPlomb95), 4);
-            //this.ajouter_vehicule(new Moto("4576", "BMW", 200000, 9,0), 8);
-            //this.ajouter_vehicule(new Voiture("7789", "audi", 200000, 4, Tcarburant.sansPlomb98), 9);
-            //this.ajouter_vehicule(new Voiture("1243", "Renault", 200000, 8,Tcarburant.sansPlomb98), 5);
-            //this.ajouter_vehicule(new Camion("4516", "BMW", 200000, 9,25,Tcarburant.sansPlomb98), 1);
-            //this.ajouter_vehicule(new Moto("7289", "audi", 200000, 4,0), 1);
-            
-            //this.ajouter_commande(TVehicule.voiture, "5", "paris", "Cergy", 80);
-            //this.ajouter_commande(TVehicule.camion, "6", "avranche", "brest", 350);
-            //this.ajouter_commande(TVehicule.camion, "6", "brest", "avranche", 400);
-            //this.ajouter_commande(TVehicule.moto, "7", "Lyon", "HR", 700);
-        }
-
         // getters and setters
         public List<Vehicule> getListVehiculeControleur(string identifiant)
         {
             return this.array_controleurs[Array.FindIndex(this.array_controleurs, c => c.Identifiant == identifiant)].List_VMaintenance;
+        }
+        public Controleur getControleurById(string identifiant)
+        {
+            return Array_controleurs[Array.FindIndex(Array_controleurs, c => c.Identifiant == identifiant)];
+        }
+        public List<Parking> getAllParkingAvailable(TVehicule typeVehicule)
+        {
+            return this.list_parkings.FindAll(p => p.containTypeV(typeVehicule));
         }
         public List<Vehicule> List_vehicule
         {

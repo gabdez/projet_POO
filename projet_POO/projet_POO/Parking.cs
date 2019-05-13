@@ -7,21 +7,25 @@ namespace projet_POO
         private Vehicule[] places = new Vehicule[10];
         public string emplacement;
         private int codeP;
-        private int nbrVehicule = 0; // nombre de vehicule sur le parking
 
         public Parking() { }
-        public Parking(int codeP, string emplacement)
+
+        public int nbrVehicule()
         {
-            this.codeP = codeP;
-            this.emplacement = emplacement;
+            int nbr = 0;
+            for(int i = 0; i < this.places.Length; i++)
+            {
+                if (this.places[i] != null) nbr++;
+            }
+            return nbr;
         }
+
         public void addVehicule(int cPlace, Vehicule v)
         {
             if(cPlace == -1) 
-                this.places[this.nbrVehicule] = v;
+                this.places[this.nbrVehicule()] = v;
             else
                 this.places[cPlace] = v;
-            this.nbrVehicule++;
         }
         /**
          * @ return is old place in parking
@@ -30,13 +34,13 @@ namespace projet_POO
         {
             for (int i = 0; i < this.places.Length; i++)
             {
-                if (this.places[i] == v) { this.places[i] = null; this.nbrVehicule -= 1; return i; };
+                if (this.places[i] == v) { this.places[i] = null; return i; };
             }
             return -1;
         }
-        public bool estComplet()
+        public bool containTypeV(TVehicule typeVehicule)
         {
-            return this.nbrVehicule == 9;
+            return Array.Find(this.places, p => p != null && p.Dispo == Dispo.disponible && p.TypeV == typeVehicule) == null ? false : true ;
         }
         
 
@@ -58,7 +62,7 @@ namespace projet_POO
 
         public override string ToString()
         {
-            return "Code parking: " + this.codeP + " ; Emplacement: " + this.emplacement + " ; nombre de place libre: " + (9 -this.nbrVehicule);
+            return "Code parking: " + this.codeP + " ; Emplacement: " + this.emplacement + " ; nombre de place libre: " + (10 -this.nbrVehicule());
         }
 
         public string getData()
@@ -66,14 +70,13 @@ namespace projet_POO
             string sep = "--;--";
             string codeP = this.codeP + sep;
             string emplacement = this.emplacement + sep;
-            string nbrVehicule = this.nbrVehicule + sep;
             //string  = this.places + sep;
             string str = "";
             foreach (Vehicule v in this.places)
             {
                 str = str + ( v!=null ? v.Immat : "") + ",!";
             }
-            return codeP + emplacement + nbrVehicule + str + sep;
+            return codeP + emplacement + str + sep;
         }
 
         public void loadData(string s)
@@ -81,7 +84,6 @@ namespace projet_POO
             string[] tokens = s.Split(new string[] { "--;--" }, StringSplitOptions.None);
             this.codeP = int.Parse(tokens[0]);
             this.emplacement = tokens[1];
-            this.nbrVehicule = int.Parse(tokens[2]);
         }
     }
 }

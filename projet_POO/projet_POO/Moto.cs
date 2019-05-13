@@ -9,16 +9,10 @@ namespace projet_POO
     class Moto : Vehicule
     {
         public Moto() { }
-        public Moto(String immat, string marque, int prix_achat, float conso_km, Tcarburant carb)
+        public Moto(string immat, string marque, float prix_achat, float conso_km, Tcarburant carb) : base(immat, marque, prix_achat, conso_km, carb)
         {
-            this.immatriculation = immat;
-            this.marque = marque;
-            this.prix_achat = prix_achat;
-            this.conso_km = conso_km;
             this.nbr_roues = 2;
             this.typeV = TVehicule.moto;
-            this.nbr_km_parcouru = 0;
-            this.Carb = carb;
         }
 
         public override string getData()

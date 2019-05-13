@@ -11,11 +11,16 @@ namespace projet_POO
         private List<Vehicule> list_VMaintenance = new List<Vehicule>();
 
         public Controleur() { }
-        public Controleur(string ident, string mdp):base(mdp, ident, "accoutf14@gmail.com", "controleur", "controleur"){}
 
         public override string getType()
         {
             return "controleur";
+        }
+
+        public void deplacerVehicule(Parking pArrivé, Parking pDepart, Vehicule vehicule , int placeParking)
+        {
+            pDepart.removeVehicule(vehicule);
+            pArrivé.addVehicule(placeParking, vehicule);
         }
 
         public List<Vehicule> List_VMaintenance

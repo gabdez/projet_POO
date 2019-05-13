@@ -12,8 +12,6 @@ namespace projet_POO
         protected string email;
         protected string nom;
         protected string prenom;
-
-        public Utilisateur() { }
         public Utilisateur(string mdp, string ident, string email, string nom, string prenom)
         {
             this.mdp = encrypt(mdp);
@@ -22,6 +20,7 @@ namespace projet_POO
             this.nom = nom;
             this.prenom = prenom;
         }
+        public Utilisateur() { }
 
         public bool checkConnexion(string identifiant, string mdp)
         {
@@ -29,7 +28,7 @@ namespace projet_POO
         }
         public abstract string getType();
 
-        public String Identifiant
+        public string Identifiant
         {
             get
             {
@@ -40,19 +39,7 @@ namespace projet_POO
                 this.identifiant = value;
             }
         }
-
-        public String Mdp
-        {
-            get
-            {
-                return decrypt(this.mdp);
-            }
-            set
-            {
-                this.mdp = encrypt(value);
-            }
-        }
-        public String Email
+        public string Email
         {
             get
             {
@@ -63,7 +50,7 @@ namespace projet_POO
                 this.email = value;
             }
         }
-        public String Nom
+        public string Nom
         {
             get
             {
@@ -74,7 +61,7 @@ namespace projet_POO
                 this.nom = value;
             }
         }
-        public String Prenom
+        public string Prenom
         {
             get
             {
